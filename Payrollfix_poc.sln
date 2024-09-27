@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35208.52
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payrollfix_poc", "Payrollfix_poc\Payrollfix_poc.csproj", "{04F7285A-D06E-4B04-A043-3172636E237D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04F7285A-D06E-4B04-A043-3172636E237D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04F7285A-D06E-4B04-A043-3172636E237D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04F7285A-D06E-4B04-A043-3172636E237D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04F7285A-D06E-4B04-A043-3172636E237D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AF52DA36-2051-44A9-AE89-7BB466DE73F1}
+	EndGlobalSection
+EndGlobal
