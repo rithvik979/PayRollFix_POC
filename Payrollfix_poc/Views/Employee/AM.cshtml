@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Payrollfix_poc.Models.Attandence>
+
+@{
+	ViewData["Title"] = "Attendance Details for Employee";
+}
+
+<div class="container">
+	<div class="row">
+        @await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+		<div class="col-md-10">
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Check In</th>
+					<th>Check Out</th>
+					<th>Work Hours</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>@item.Date.ToString("dd MMM yyyy")</td>
+						<td> </td>
+						<td> </td>
+						<td>@item.WorkHours</td>
+						<td>@item.Status</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+</
+

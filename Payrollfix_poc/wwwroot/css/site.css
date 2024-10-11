@@ -17,6 +17,16 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
+
+.company-logo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: left;
 }
+
+    .company-logo .logo {
+        width: 225px;
+        height: 80px;
+        border-radius: 25px;
+        object-fit: cover; /* Ensure the image fits the circle properly */
+    }

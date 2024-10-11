@@ -1,0 +1,102 @@
+﻿@model Payrollfix_poc.Models.Employee  
+
+<div class="container">
+    <div class="row">
+        <!-- Left Navigation -->
+        @await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+        <!-- Employee Details Section -->
+        <div class="col-md-10">
+            <div class="employee-details-card">
+                <div class="employee-header">
+                    <div class="profile-image">
+                        <img src="~/images/profile_placeholder.jpg" alt="Profile Picture" />
+                    </div>
+                    <div class="employee-info">
+                        <h2>@Model.FirstName @Model.LastName</h2>
+                        <p>@Model.EmployeeId</p>
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <h4>Basic Information</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Employee ID:</strong> @Model.EmployeeId</p>
+                            <p><strong>Role:</strong> @Model.Position?.ToString() ?? "N/A"</p> <!-- Use null-conditional operator -->
+                            <p><strong>Date of Birth:</strong> @Model.DOB.ToShortDateString()</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Team Lead:</strong> @Model.employee?.FirstName @Model.employee?.LastName ?? "N/A"</p> <!-- Manager's name -->
+                            <p><strong>CTC:</strong> 45 LPA</p> <!-- This should ideally come from your model -->
+                            <p><strong>Date of Joining:</strong> @Model.JoinDate.ToShortDateString()</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <h4>Contact Information</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Email:</strong> @Model.Email</p>
+                            <p><strong>Phone:</strong> @Model.Phone_no</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Address:</strong> @Model.Address, Hyderabad, Telangana, 500009</p>
+                            <p><strong>Country:</strong> India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <h4>Applied Leaves</h4>
+                    <table class="table leave-table">
+                        <thead>
+                            <tr>
+                                <th>Leave Type</th>
+                                <th>Duration</th>
+                                <th>No. of Days</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        @* <tbody>
+                            @if (Model.LoginActivities != null && Model.LoginActivities.Any())  <!-- Check for related data -->
+                            {
+                                foreach (var leave in Model.LoginActivities)  <!-- Assuming LoginActivities might include leave information -->
+                                {
+                                    <tr>
+                                        <td>@leave.LeaveType</td> <!-- Assuming LeaveType is a property of LoginActivity -->
+                                        <td>@leave.StartDate.ToShortDateString() - @leave.EndDate.ToShortDateString()</td> <!-- Update based on your Leave model -->
+                                        <td>@leave.NumberOfDays</td> <!-- Update based on your Leave model -->
+                                        <td>
+                                            @if (leave.Status == "Approved")
+                                            {
+                                                <span class="badge badge-success">Approved</span>
+                                            }
+                                            else if (leave.Status == "Pending")
+                                            {
+                                                <span class="badge badge-warning">Pending</span>
+                                            }
+                                            else if (leave.Status == "Denied")
+                                            {
+                                                <span class="badge badge-danger">Denied</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">No applied leaves found.</td>  <!-- Message if no leaves -->
+                                </tr>
+                            }
+                        </tbody> *@
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styling (if required) -->
+<!-- Add your CSS styling here (the same styles you provided before) -->

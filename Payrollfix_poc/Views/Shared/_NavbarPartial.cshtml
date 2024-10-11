@@ -1,14 +1,15 @@
 ﻿<div class="col-md-2">
     <div class="list-group">
-        <a class="list-group-item list-group-item-action"  asp-action="Details">Dashboard</a>
-        <a class="list-group-item list-group-item-action" asp-action="">Employee</a>
-        <a class="list-group-item list-group-item-action" asp-action="">Contractors</a>
-        <a class="list-group-item list-group-item-action" asp-action="">Login Details</a>
-        <a class="list-group-item list-group-item-action"  asp-action="Attandence">Attendance</a>
-        <a class="list-group-item list-group-item-action" asp-action="">Leaves</a>
-        <a class="list-group-item list-group-item-action" asp-action="">Timesheet</a>
+        <a class="list-group-item list-group-item-action" asp-controller="Employee" asp-action="Dashboard">Dashboard</a>
+        <a class="list-group-item list-group-item-action" asp-controller="Employee" asp-action="Details">Employee</a>
+        <a class="list-group-item list-group-item-action" asp-controller="Employee" asp-action="LoginDetails">Login Details</a>
+        <a class="list-group-item list-group-item-action" asp-controller="Employee" asp-action="AM">Attendance</a>
+        <a class="list-group-item list-group-item-action" asp-controller="Leave" asp-action="LeaveDetails">Leaves</a>
+        <a class="list-group-item list-group-item-action" asp-controller="Employee" asp-action="TimeSheet">Timesheet</a>
+        <a class="list-group-item list-group-item-action" asp-controller="" asp-action="">ORG Tree</a>
         <a class="list-group-item list-group-item-action" asp-action="">Pay Slips</a>
         <a class="list-group-item list-group-item-action" asp-action="">Expenses</a>
-        <a class="list-group-item list-group-item-action" asp-action="">Logout</a>
+        <a class="list-group-item list-group-item-action" asp-controller="Home" asp-action="Logout">Logout</a>
     </div>
 </div>
+

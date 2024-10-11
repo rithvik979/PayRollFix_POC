@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Payrollfix_poc.Models.LoginViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 <!DOCTYPE html>
@@ -82,10 +83,11 @@
     <div class="container">
         <div class="login-box">
             <h2> Login</h2>
-            <form action="#" method="POST">
-                <input type="text" name="username" placeholder="Username" required>
+            <form action="Login" method="POST">
+                @Html.AntiForgeryToken()
+                <input type="text" name="EmployeeId" placeholder="EmployeeId" required>
                 <input type="password" name="password" placeholder="Password" required>
-                <a asp-action="Privacy">Forgot password</a>
+                <a asp-action="ForgotPassword">Forgot password</a>
                 <button type="submit">Login</button>
                 <p class="signup">Don't have an Account? <a asp-action="Signup">Signup Here</a></p>
             </form>
@@ -93,3 +95,5 @@
     </div>
 </body>
 </html>
+
+ 

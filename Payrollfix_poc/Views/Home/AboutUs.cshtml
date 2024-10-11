@@ -1,0 +1,124 @@
+﻿@{
+	ViewData["Title"] = "About Us";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="hero-section">
+	<div class="container text-center">
+		<h1>Create Online Quote in Minutes</h1>
+		<p>Easy, fast, and reliable. Get your quote online with just a few clicks.</p>
+		<a href="#" class="btn btn-primary">Try Now</a>
+		<div>
+			<!-- Responsive image for hero section -->
+			<img src="~/Images/Big.png" alt="Online Quote Screenshot" class="img-fluid hero-image" />
+		</div>
+	</div>
+</section>
+
+<section class="business-management">
+	<div class="container text-center">
+		<h2>Manage All Your Business Needs At One Place</h2>
+		<a href="#" class="btn btn-primary">Get Started</a>
+		<div>
+			<!-- Responsive image for business management section -->
+			<img src="~/Images/Small.png" alt="Business Management Image" class="img-fluid" />
+		</div>
+	</div>
+</section>
+
+<section class="features">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-3 feature-card">
+				<!-- Responsive image for feature card -->
+				<img src="~/Images/4.png" alt="Customize Your Online Invoices" class="img-fluid" />
+				<h3>Customize Your Online Invoices</h3>
+				<p>
+					Easily customize your invoices to match your business needs with our flexible templates.
+				</p>
+				<a href="#" class="btn btn-secondary">Learn More</a>
+			</div>
+
+			<div class="col-md-3 feature-card">
+				<!-- Responsive image for feature card -->
+				<img src="~/Images/4.png" alt="Customize Your Online Invoices" class="img-fluid" />
+				<h3>Customize Your Online Invoices</h3>
+				<p>
+					Easily customize your invoices to match your business needs with our flexible templates.
+				</p>
+				<a href="#" class="btn btn-secondary">Learn More</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3 feature-card">
+				<!-- Responsive image for feature card -->
+				<img src="~/Images/4.png" alt="Customize Your Online Invoices" class="img-fluid" />
+				<h3>Customize Your Online Invoices</h3>
+				<p>
+					Easily customize your invoices to match your business needs with our flexible templates.
+				</p>
+				<a href="#" class="btn btn-secondary">Learn More</a>
+			</div>
+
+			<div class="col-md-3 feature-card">
+				<!-- Responsive image for feature card -->
+				<img src="~/Images/4.png" alt="Customize Your Online Invoices" class="img-fluid" />
+				<h3>Customize Your Online Invoices</h3>
+				<p>
+					Easily customize your invoices to match your business needs with our flexible templates.
+				</p>
+				<a href="#" class="btn btn-secondary">Learn More</a>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="join-section text-center">
+	<div class="container">
+		<h2>Wanna join the Accounting Software?</h2>
+		<a asp-acion="Signup" class="btn btn-primary">Create Account</a>
+	</div>
+</section>
+
+<style>
+	.hero-section {
+		padding: 60px 0;
+		background-color: #f7f7f7;
+	}
+
+		.hero-section .hero-image {
+			max-width: 100%; /* Ensure the image scales responsively */
+			height: auto;
+			margin-top: 30px;
+			margin-left: auto;
+		}
+
+	.business-management {
+		padding: 40px 0;
+		background-color: #fff;
+	}
+
+	.features {
+		padding: 60px 0;
+		background-color: #f0f8ff;
+	}
+
+	.feature-card {
+		text-align: center;
+		padding: 20px;
+		background-color: #fff;
+		border-radius: 8px;
+		margin-bottom: 30px;
+	}
+
+	.join-section {
+		padding: 40px 0;
+		background-color: #007bff;
+		color: #fff;
+	}
+
+	.btn {
+		margin-top: 15px;
+	}
+</style>

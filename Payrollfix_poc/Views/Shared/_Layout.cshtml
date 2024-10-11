@@ -9,11 +9,30 @@
     <link rel="stylesheet" href="~/PayRollFix.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <div class="container">
-            <img src="logo.png" alt="PayrollFix Logo">
+    <header class="bg-light py-2">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="company-logo">
+                <img src="~/Images/logo.png" alt="Payrollfix" class="logo">
+            </div>
+            <nav>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Login", "Home")">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AboutUs", "Home")">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Support", "Home")">Support</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -23,15 +42,6 @@
     <footer class="footer bg-dark text-white py-sm-1">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <h5>Pages</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="@Url.Action("Index", "Home")" class="text-white">Home</a></li>
-                        <li><a href="@Url.Action("About", "Home")" class="text-white">About Us</a></li>
-                        <li><a href="@Url.Action("Contact", "Home")" class="text-white">Contact Us</a></li>
-                        <li><a href="@Url.Action("Support", "Home")" class="text-white">Support</a></li>
-                    </ul>
-                </div>
                 <div class="col-md-4">
                     <h5>Services</h5>
                     <ul class="list-unstyled">
@@ -45,7 +55,10 @@
                     <h5>Contact</h5>
                     <p>86 East Birchwood Ave<br>Brooklyn, New York 11201</p>
                     <p>Email: <a href="mailto:contact@payrollfix.com" class="text-white">contact@payrollfix.com</a></p>
-                    <p>Phone: <a href="tel:1234567890" class="text-white">(123) 456-7890</a></p>
+                    <p>Phone: <a href="tel:"123456789"0" class="text-white">(123) 456-7890</a></p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Follow Us</h5>
                     <div class="social-icons">
                         <a href="#" class="text-white mr-3"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="text-white mr-3"><i class="fab fa-twitter"></i></a>

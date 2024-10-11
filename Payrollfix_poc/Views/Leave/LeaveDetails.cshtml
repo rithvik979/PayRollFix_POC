@@ -1,0 +1,56 @@
+﻿<div class="container-fluid">
+	<div class="row">
+		<!-- Left Column: Navbar -->
+			@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+		
+
+		<!-- Right Column: Leave Balance and Leave Details -->
+		<div class="col-md-10">
+			<!-- Leave Balance Section -->
+			<div class="row mb-4">
+				<div class="col-md-12">
+					<h3>Leave Balance</h3>
+					<div>
+						<p><strong>Used Days:</strong> @Model.LeaveBalance.UsedDays</p>
+						<p><strong>Total Days:</strong> @Model.LeaveBalance.MaxDays</p>
+						<p><strong>Remaining Days:</strong> @(Model.LeaveBalance.MaxDays - Model.LeaveBalance.UsedDays)</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Leave Details Table Section -->
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Leave Details</h3>
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Employee ID</th>
+								<th>Employee Name</th>
+								<th>Leave Type</th>
+								<th>Start Date</th>
+								<th>End Date</th>
+								<th>Status</th>
+								<th>Reason</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var leave in Model.Leaves)
+							{
+								<tr>
+									<td>@leave.Employee.EmployeeId</td>
+									<td>@leave.Employee.FirstName @leave.Employee.LastName</td>
+									<td>@leave.LeaveType</td>
+									<td>@leave.StartDate.ToString("dd MMM yyyy")</td>
+									<td>@leave.EndDate.ToString("dd MMM yyyy")</td>
+									<td>@leave.Status</td>
+									<td>@leave.Reason</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

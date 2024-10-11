@@ -1,0 +1,48 @@
+﻿@model List<Payrollfix_poc.Models.LoginActivity>
+
+<div class="container">
+	<div class="row">
+		<!-- Left Navigation -->
+		@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+		<!-- Employee Details Section -->
+		<div class="col-md-10">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Login Time</th>
+						<th>Logout Time</th>
+						<th>Duration</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if(Model != null){
+						@foreach (var activity in Model)
+						{
+							<tr>
+								<td>@activity.LoginTime.ToString("g")</td>
+								<td>@activity.LogoutTime?.ToString("g") ?? "Still Logged In"</td>
+								<td>
+									@if (activity.LogoutTime.HasValue)
+									{
+										TimeSpan duration = activity.LogoutTime.Value - activity.LoginTime;
+										@duration.ToString("hh\\:mm\\:ss")
+									}
+									else
+									{
+										<span>--</span>
+									}
+									}
+
+								</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<p>Model not thier</p>
+					}
+				</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
