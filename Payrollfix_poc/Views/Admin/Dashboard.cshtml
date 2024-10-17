@@ -1,0 +1,209 @@
+﻿@model Payrollfix_poc.Models.Employee
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<!-- Header Section -->
+<header class="page-header bg-light p-3 mb-3">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <h1 class="page-title">Employee Profile</h1>
+        <button class="btn btn-primary">Edit Profile</button>
+    </div>
+</header>
+
+<!-- Main Section -->
+<div class="container employee-profile">
+    <div class="row">
+        <!-- Left Profile Section -->
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                @{
+                    string imagepath = Url.Content("~/images/Employees/" + Model.EmployeeId + ".jpg");
+                }
+                <img src=@imagepath alt="Employee Photo" class="card-img-top rounded-circle mx-auto d-block mt-3" style="width: 120px; height: 120px;">
+                <div class="card-body text-center">
+                    <h4 class="card-title">@Model.FirstName @Model.LastName</h4>
+                    <p><strong>Status:</strong> Active</p>
+                    <p><strong>Employee ID:</strong> @Model.EmployeeId</p>
+                    <p><strong>Employment End Date:</strong> 5 May 2023</p>
+                    <a href="#" class="btn btn-danger btn-block">Edit Employee</a>
+                    <a asp-action="TimeSheet" class="btn btn-secondary btn-block">View Timesheet</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Details Section -->
+        <div class="col-md-9">
+            <div class="row">
+                <!-- Basic Information -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">Basic Information</div>
+                        <div class="card-body">
+                            <p><strong>First Name:</strong> @Model.FirstName</p>
+                            <p><strong>Last Name:</strong> @Model.LastName</p>
+                            <p><strong>Email:</strong> @Model.Email</p>
+                            <p><strong>Phone:</strong> @Model.Phone_no</p>
+                            <p><strong>Gender:</strong> @Model.Gender</p>
+                            <p><strong>Date of Birth:</strong> @Model.DOB.ToShortDateString()</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaves Section -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center bg-info text-white">
+                            <span>Leaves</span>
+                            <button class="btn btn-sm btn-link text-white" data-bs-toggle="modal" data-bs-target="#leavesModal">View More</button>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Annual Leaves:</strong> 160 H | Used: 28 H | Available: 20 H</p>
+                            <p><strong>Sick Leaves:</strong> 10 H | Used: 6 H | Available: 4 H</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bank Details Section -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center bg-info text-white">
+                            <span>Bank Details</span>
+                            <button class="btn btn-sm btn-link text-white" data-bs-toggle="modal" data-bs-target="#bankDetailsModal">View More</button>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Bank Name:</strong> XYZ Bank</p>
+                            <p><strong>Account Number:</strong> 0000-0000-0000</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payslips Section -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center bg-info text-white">
+                            <span>Payslips</span>
+                            <button class="btn btn-sm btn-link text-white" data-bs-toggle="modal" data-bs-target="#payslipsModal">View More</button>
+                        </div>
+                        <div class="card-body">
+                            <p>Last Payslip: 01-Dec-2022</p>
+                            <p>Net Salary: 60,000</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaves Modal -->
+<div class="modal fade" id="leavesModal" tabindex="-1" aria-labelledby="leavesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leavesModalLabel">All Leaves Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Annual Leaves:</strong> 160 H | Used: 28 H | Available: 20 H</p>
+                <p><strong>Sick Leaves:</strong> 10 H | Used: 6 H | Available: 4 H</p>
+                <p><strong>Other Leaves:</strong> Custom Leave Data</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bank Details Modal -->
+<div class="modal fade" id="bankDetailsModal" tabindex="-1" aria-labelledby="bankDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bankDetailsModalLabel">All Bank Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Bank Name:</strong> XYZ Bank</p>
+                <p><strong>Account Number:</strong> 0000-0000-0000</p>
+                <p><strong>Branch:</strong> Main Street</p>
+                <p><strong>IFSC Code:</strong> XYZ0001234</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payslips Modal -->
+<div class="modal fade" id="payslipsModal" tabindex="-1" aria-labelledby="payslipsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="payslipsModalLabel">All Payslips</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Payslip Date: 01-Dec-2022</p>
+                <p>Gross Salary: 63,000</p>
+                <p>Deductions: 30,000</p>
+                <p>Net Salary: 60,000</p>
+                <p>Payslip Date: 01-Jan-2022</p>
+                <p>Gross Salary: 64,000</p>
+                <p>Deductions: 32,000</p>
+                <p>Net Salary: 62,000</p>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .page-header {
+        background-color: #f8f9fa;
+        padding: 15px 0;
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        font-weight: 600;
+    }
+
+    .employee-profile img {
+        border: 2px solid #ddd;
+        border-radius: 50%;
+    }
+
+    .employee-profile .btn-block {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .modal-header {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .btn-link {
+        text-decoration: none;
+        color: white;
+    }
+
+    .btn-link:hover {
+        text-decoration: underline;
+        color: #ddd;
+    }
+
+    .card-body p {
+        margin-bottom: 0.5rem;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+

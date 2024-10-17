@@ -1,0 +1,168 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Assuming you're using a shared layout page
+}
+
+<!-- Custom Styling -->
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    h1, h2 {
+        font-weight: bold;
+        color: #17a2b8; /* Bootstrap Info color */
+    }
+
+    .contact-section {
+        background-color: #f8f9fa; /* Light gray background for the section */
+        padding: 50px 0;
+    }
+
+    .contact-info {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-info h3 {
+        color: #343a40; /* Darker text color */
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .contact-info p {
+        color: #6c757d; /* Muted text color */
+    }
+
+    .contact-info a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .contact-info a:hover {
+        text-decoration: underline;
+    }
+
+    .form-section {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+    }
+
+    .btn-submit {
+        background-color: #28a745; /* Green color */
+        color: #fff;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 50px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-submit:hover {
+        background-color: #218838; /* Darker green on hover */
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #343a40;
+    }
+
+    .submit-heading {
+        color: #6c757d;
+    }
+
+    .submit-form h2 {
+        color: #28a745; /* Green text for form heading */
+        font-weight: bold;
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="contact-section">
+    <div class="container">
+        <div class="row">
+            <!-- Left Column: Contact Information -->
+            <div class="col-md-6 contact-info">
+                <h1>Hello! How can we help you today?</h1>
+                <h3>DISCOVER US</h3>
+                <p>
+                    Accounting is here to help you;<br />
+                    Our experts are available to answer any questions you might have.<br />
+                    We've got the answers.
+                </p>
+                <h3>VISIT US</h3>
+                <p>Office no. G-02, Building 1, Ground Floor, Auckland, New Zealand.</p>
+
+                <h3>EMAIL US</h3>
+                <p><a href="mailto:accounting@gmail.com">accounting@gmail.com</a></p>
+
+                <h3>CALL US</h3>
+                <p>+971-4-576-6720<br />+971-55-988-7007</p>
+
+                <!-- Optional Image block -->
+                <div class="mt-4">
+                    <img src="/images/contact_image.jpg" alt="Contact Image" class="img-fluid rounded" />
+                </div>
+            </div>
+
+            <!-- Right Column: Submit Form -->
+            <div class="col-md-6 submit-form form-section">
+                <h2>Submit a Form</h2>
+                <p class="submit-heading">Any question or remarks? Just write us a message!</p>
+
+                <!-- Contact Form -->
+                <form method="post" action="@Url.Action("SubmitContactForm", "Home")">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" name="FirstName" required />
+                        </div>
+                        <div class="col">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" name="LastName" required />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="Email" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" name="PhoneNumber" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Select Subject?</label>
+                        <div>
+                            <input type="radio" id="invoice" name="Subject" value="Invoice" required />
+                            <label for="invoice">Invoice</label>
+                            <input type="radio" id="paySlips" name="Subject" value="Pay Slips" />
+                            <label for="paySlips">Pay Slips</label>
+                            <input type="radio" id="quotation" name="Subject" value="Quotation" />
+                            <label for="quotation">Quotation</label>
+                            <input type="radio" id="other" name="Subject" value="Other" />
+                            <label for="other">Other</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" name="Message" rows="4" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

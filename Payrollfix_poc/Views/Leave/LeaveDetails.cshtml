@@ -1,15 +1,25 @@
-﻿<div class="container-fluid">
+﻿@{
+	Layout = "~/views/Shared/_EmployeeLayout.cshtml";
+}
+
+<div class="container-fluid">
 	<div class="row">
 		<!-- Left Column: Navbar -->
-			@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
-		
-
+		@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
 		<!-- Right Column: Leave Balance and Leave Details -->
 		<div class="col-md-10">
 			<!-- Leave Balance Section -->
 			<div class="row mb-4">
 				<div class="col-md-12">
 					<h3>Leave Balance</h3>
+					<div class="row">
+						<!-- Apply Leave Button -->
+						<div class="col-md-12">
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#applyLeaveModal">
+								Apply for Leave
+							</button>
+						</div>
+					</div>
 					<div>
 						<p><strong>Used Days:</strong> @Model.LeaveBalance.UsedDays</p>
 						<p><strong>Total Days:</strong> @Model.LeaveBalance.MaxDays</p>
@@ -54,3 +64,7 @@
 		</div>
 	</div>
 </div>
+
+<!-- Apply Leave Modal -->
+@Html.Partial("_ApplyLeave", new Payrollfix_poc.Models.Leave())
+

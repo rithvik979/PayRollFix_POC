@@ -22,7 +22,6 @@ public class program
 
         // Add services to the container.
         builder.Services.AddMvc();
-        builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 
         var app = builder.Build();
 
@@ -44,7 +43,7 @@ public class program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Home}/{action=AboutUs}/{id?}");
+            pattern: "{controller=Home}/{action=Login}/{id?}");
 
         app.Run();
     }

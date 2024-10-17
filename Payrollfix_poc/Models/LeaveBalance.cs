@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Payrollfix_poc.Models
@@ -11,6 +12,7 @@ namespace Payrollfix_poc.Models
         public int MaxDays { get; set; }
         [ForeignKey("EmployeeId")]
         public int EmployeeId {  get; set; }
+        [ValidateNever]
         public Employee Employee { get; set; }
     }
 }

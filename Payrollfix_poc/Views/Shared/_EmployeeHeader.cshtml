@@ -1,0 +1,60 @@
+﻿@model Payrollfix_poc.Models.Employee
+<div class="col-md-10 ml-auto px-0">
+	<header class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+		<div class="container-fluid">
+			<!-- Menu Icon -->
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Logo/Company Name -->
+			<a class="navbar-brand" href="#">
+				<img src="~/images/logo.png" alt="Company Logo" class="d-inline-block align-top" style="width: 30px; height: 30px;">
+				<span class="text-danger">Rithvik Software Solutions</span>
+			</a>
+
+			<!-- Search, Help, Notifications, Settings, User Profile -->
+			<ul class="navbar-nav ml-auto align-items-center">
+				<!-- Search Icon -->
+				<li class="nav-item">
+					<a class="nav-link" href="#">
+						<i class="fas fa-search"></i>
+					</a>
+				</li>
+
+				<!-- Help Icon -->
+				<li class="nav-item">
+					<a class="nav-link" href="#">
+						<i class="fas fa-question-circle"></i> Help
+					</a>
+				</li>
+
+				<!-- Notification Icon -->
+				<li class="nav-item">
+					<a class="nav-link" href="#">
+						<i class="fas fa-bell"></i>
+					</a>
+				</li>
+
+				<!-- Settings Icon -->
+				<li class="nav-item">
+					<a class="nav-link" href="#">
+						<i class="fas fa-cog"></i>
+					</a>
+				</li>
+
+				<!-- User Profile -->
+				
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<img src=imagepath alt="User Profile" class="rounded-circle" style="width: 35px; height: 35px;">
+					</a>
+					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+						<a asp-controller="Employee" asp-action="Dashboard" class="dropdown-item">Profile</a>
+						<a asp-controller="Home" asp-action="Logout" class="dropdown-item">Logout</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</header>
+</div>

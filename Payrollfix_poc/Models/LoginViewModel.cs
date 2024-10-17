@@ -6,7 +6,7 @@ namespace Payrollfix_poc.Models
 	{
 		[Required]
 		[Key]
-		public int EmployeeId { get; set; } // Employee ID input field
+		public int Id { get; set; } // Employee ID input field
 
 		[Required]
 		[DataType(DataType.Password)]

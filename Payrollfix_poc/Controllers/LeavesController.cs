@@ -36,8 +36,44 @@ namespace Payrollfix_poc.Controllers
                 LeaveBalance = leaveBalance
             };
 
-            return View(model);
+			ViewData["ActiveLeaves"] = "active";
+			return View(model);
         }
 
-    }
+		[HttpPost]
+		public IActionResult ApplyLeave(Leave leave)
+		{
+			if (ModelState.IsValid)
+			{
+				leave.EmployeeId = (int)HttpContext.Session.GetInt32("EmployeeId");
+				// Get the employee's leave balance
+				var leaveBalance = _context.LeaveBalances.FirstOrDefault(lb => lb.EmployeeId == leave.EmployeeId);
+
+				// Calculate the total leave days
+				int totalLeaveDays = (leave.EndDate - leave.StartDate).Days + 1;
+
+				// Check if the employee has enough remaining days
+				if (totalLeaveDays > (leaveBalance.MaxDays - leaveBalance.UsedDays))
+				{
+					ViewBag.Message="You don't have enough leave days.";
+					return View("_ApplyLeave");
+				}
+
+				// Update the used days in leave balance
+				leaveBalance.UsedDays += totalLeaveDays;
+
+				// Add the new leave to the database
+				_context.Leaves.Add(leave);
+				_context.SaveChanges();
+
+				// Redirect back to the leave overview page
+				return RedirectToAction("LeaveDetails");
+			}
+
+			// Return the same view with validation errors
+			return View("_ApplyLeave", leave);
+		}
+
+
+	}
 }

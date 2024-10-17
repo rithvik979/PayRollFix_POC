@@ -1,0 +1,38 @@
+﻿@model Payrollfix_poc.Models.Timesheet
+
+@{
+	ViewBag.Title = "Create Timesheet";
+}
+@{
+	Layout = "~/views/Shared/_EmployeeLayout.cshtml";
+}
+<div class="container">
+	<div class="row">
+		@await Html.PartialAsync("_NavbarPartial")
+
+		<!-- Employee Search Form -->
+		<div class="col-md-10">
+			<h2>Create Timesheet</h2>
+			<form asp-action="Create" method="post">
+				<input type="hidden" asp-for="EmployeeId" />
+				<div class="form-group">
+					<label for="Date">Date</label>
+					<input asp-for="Date" class="form-control" />
+					<span asp-validation-for="Date" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label for="HoursWorked">Hours Worked</label>
+					<input asp-for="HoursWorked" class="form-control" />
+					<span asp-validation-for="HoursWorked" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label for="Description">Description</label>
+					<textarea asp-for="Description" class="form-control"></textarea>
+					<span asp-validation-for="Description" class="text-danger"></span>
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+				<a asp-action="TimesheetList" class="btn btn-secondary">Cancel</a>
+			</form>
+		</div>
+	</div>
+</div>

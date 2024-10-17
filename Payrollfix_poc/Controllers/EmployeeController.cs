@@ -9,17 +9,18 @@ namespace Payrollfix_poc.Controllers
     public class EmployeeController : Controller
     {
         public readonly PayRollFix_pocContext _context;
-        public IEmployeeRepository _repository { get; set; }
-        public EmployeeController(PayRollFix_pocContext context,IEmployeeRepository repository)
+        
+        public EmployeeController(PayRollFix_pocContext context)
         {
             _context = context;
-            _repository = repository;
         }
         public async Task<IActionResult> Dashboard()
         {
             var employeeId = HttpContext.Session.GetInt32("EmployeeId");
 			var employee = await _context.Employee
-                //.Include(e => e.LoginActivities) // Include LoginActivities if applicable
+                .Include(e => e.Department) // Include LoginActivities if applicable
+                .Include(e => e.Position)
+                .Include(e => e.Leaves )
                 .FirstOrDefaultAsync(e => e.EmployeeId == employeeId);
 
             if (employee == null)
@@ -27,33 +28,53 @@ namespace Payrollfix_poc.Controllers
                 return NotFound(); // Handle not found
             }
 
-            return View(employee); // Pass the single employee data to the view
+			ViewData["ActiveDashboard"] = "active";
+			return View(employee); // Pass the single employee data to the view
         }
         public IActionResult Create()
         {
             return View();
         }
-        public IActionResult Details(string name)
+        public IActionResult Organization(string name)
         {
-            if (string.IsNullOrEmpty(name))
+            ViewData["ActiveEmployee"] = "active";
+
+            // Get all employees if no search query is provided
+            var employees = _context.Employee.ToList();
+
+            // If a search query is provided, filter the employees
+            if (!string.IsNullOrEmpty(name))
             {
-                // Return the empty view if no search query is entered
-                return View();
+                employees = employees
+                            .Where(e => e.FirstName.Contains(name, StringComparison.OrdinalIgnoreCase) ||
+                                        e.LastName.Contains(name, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+
+                if (employees.Count == 0)
+                {
+                    ViewBag.ErrorMessage = "No employee found with the given name.";
+                }
             }
 
-            // Search for the employee by first or last name
-            var employee = _context.Employee
-                                   .FirstOrDefault(e => e.FirstName.Contains(name) || e.LastName.Contains(name));
-
-            if (employee == null)
+            // If there's only one employee found in the search, show detailed view for that employee
+            if (employees.Count == 1)
             {
-                ViewBag.ErrorMessage = "No employee found with the given name.";
-                return View();
+                return View("EmployeeDetails", employees.First());
             }
 
-            // Pass the employee object to the view
-            return View(employee);
+            // Pass the list of employees to the view
+            return View(employees);
         }
+
+        public async Task<IActionResult> OrganizationChart()
+        {
+            // Fetch all employees from the database
+            var employees = await _context.Employee.ToListAsync();
+
+            // Pass the employees to the view
+            return View(employees);
+        }
+
         public IActionResult LoginDetails()
 		{
             var employeeId = HttpContext.Session.GetInt32("EmployeeId");
@@ -76,15 +97,19 @@ namespace Payrollfix_poc.Controllers
 				return NotFound("No login activities found for the specified employee.");
 			}
 
+            ViewData["ActiveLoginDetails"] = "active";
 			return View(activities);  // Passing the login activities to the view
 		}
         public async Task<IActionResult> AM()
         {
-            Int32 id = 8;
+            var id = HttpContext.Session.GetInt32("EmployeeId");
             var attendance = await _context.Attendance
                 .Where(a => a.EmployeeId == id)
                 .ToListAsync();
+
+			ViewData["ActiveAttendance"] = "active";
 			return View(attendance);
 		}
+
 	}
 }

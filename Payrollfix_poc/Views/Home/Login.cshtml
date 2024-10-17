@@ -1,13 +1,13 @@
 ﻿@model Payrollfix_poc.Models.LoginViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Login";
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PayrollFix - Admin Login</title>
+    <title>PayrollFix - Login</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,19 +15,13 @@
             padding: 0;
             background-color: #eef2f7;
         }
-        header {
-            background-color: #2e86de;
-            padding: 20px 0;
-            text-align: center;
-        }
-        .header img {
-            width: 150px;
-        }
+
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 20px;
         }
+
         .login-box {
             background-color: #ffffff;
             border-radius: 10px;
@@ -35,11 +29,40 @@
             padding: 40px;
             max-width: 400px;
             margin: 60px auto;
+            position: relative;
         }
+
+        /* Header tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+            .tabs button {
+                background-color: #2e86de;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                border: none;
+                margin: 0 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+                .tabs button:hover {
+                    background-color: #1d5fa3;
+                }
+
+                .tabs button.active {
+                    background-color: #ff5a60; /* Color when the button is active */
+                }
+
         .login-box h2 {
             margin-bottom: 20px;
             font-size: 24px;
             color: #2e86de;
+            text-align: center;
         }
 
         .login-box input[type="text"],
@@ -64,36 +87,74 @@
             margin-top: 10px;
         }
 
-        .login-box button:hover {
-            background-color: #ff4248;
-        }
+            .login-box button:hover {
+                background-color: #ff4248;
+            }
 
         .login-box .signup {
             margin-top: 15px;
             color: #555;
+            text-align: center;
         }
 
-        .login-box .signup a {
-            color: #2e86de;
+            .login-box .signup a {
+                color: #2e86de;
+                text-decoration: none;
+            }
+
+        /* Style for forgot password */
+        .login-box a {
+            display: block;
+            margin: 10px 0;
+            color: #ff5a60;
             text-decoration: none;
         }
+
+            .login-box a:hover {
+                text-decoration: underline;
+            }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="login-box">
-            <h2> Login</h2>
-            <form action="Login" method="POST">
+            <!-- Header tabs for Admin and Employee -->
+            <div class="tabs">
+                <button id="adminButton" class="active" onclick="setAdminLogin()">Admin</button>
+                <button id="employeeButton" onclick="setEmployeeLogin()">Employee</button>
+            </div>
+
+            <h2 id="loginTitle">Admin Login</h2>
+            <form id="loginForm" method="POST">
                 @Html.AntiForgeryToken()
-                <input type="text" name="EmployeeId" placeholder="EmployeeId" required>
+                <input type="text" name="Id" id="username" placeholder="Username" required>
                 <input type="password" name="password" placeholder="Password" required>
-                <a asp-action="ForgotPassword">Forgot password</a>
+                <a href="/ForgotPassword">Forgot Password?</a>
                 <button type="submit">Login</button>
-                <p class="signup">Don't have an Account? <a asp-action="Signup">Signup Here</a></p>
+                <p class="signup">Don't have an Account? <a href="/Signup">Signup for free.</a></p>
             </form>
         </div>
     </div>
+
+    <script>
+        // Default action for Admin login
+        document.getElementById('loginForm').action = '/Home/AdminLogin';
+
+        // Function to handle Admin login selection
+        function setAdminLogin() {
+            document.getElementById('loginTitle').innerText = 'Admin Login';
+            document.getElementById('loginForm').action = '/Home/AdminLogin';
+            document.getElementById('adminButton').classList.add('active');
+            document.getElementById('employeeButton').classList.remove('active');
+        }
+
+        // Function to handle Employee login selection
+        function setEmployeeLogin() {
+            document.getElementById('loginTitle').innerText = 'Employee Login';
+            document.getElementById('loginForm').action = '/Home/EmployeeLogin';
+            document.getElementById('employeeButton').classList.add('active');
+            document.getElementById('adminButton').classList.remove('active');
+        }
+    </script>
 </body>
 </html>
-
- 

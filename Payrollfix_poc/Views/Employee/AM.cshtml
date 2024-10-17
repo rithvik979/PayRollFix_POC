@@ -2,6 +2,7 @@
 
 @{
 	ViewData["Title"] = "Attendance Details for Employee";
+	Layout = "~/views/Shared/_EmployeeLayout.cshtml";
 }
 
 <div class="container">
@@ -24,10 +25,18 @@
 				{
 					<tr>
 						<td>@item.Date.ToString("dd MMM yyyy")</td>
-						<td> </td>
-						<td> </td>
-						<td>@item.WorkHours</td>
-						<td>@item.Status</td>
+						<td>@item.CheckInTime?.ToString("HH:mm:ss")</td>
+						<td>@item.CheckOutTime?.ToString("HH:mm:ss")</td>
+							<td>
+								@if (item.WorkHours != null)
+								{
+									var totalHours = (double)item.WorkHours;
+									var timeSpan = TimeSpan.FromHours(totalHours); // Convert double to TimeSpan
+									@timeSpan.ToString(@"hh\:mm")
+								}
+							</td>
+
+							<td>@item.Status</td>
 					</tr>
 				}
 			</tbody>

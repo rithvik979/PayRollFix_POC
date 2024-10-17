@@ -1,5 +1,7 @@
 ﻿@model List<Payrollfix_poc.Models.LoginActivity>
-
+@{
+	Layout = "~/views/Shared/_EmployeeLayout.cshtml";
+}
 <div class="container">
 	<div class="row">
 		<!-- Left Navigation -->
@@ -20,7 +22,7 @@
 						{
 							<tr>
 								<td>@activity.LoginTime.ToString("g")</td>
-								<td>@activity.LogoutTime?.ToString("g") ?? "Still Logged In"</td>
+								<td>@activity.LogoutTime?.ToString("g")</td>
 								<td>
 									@if (activity.LogoutTime.HasValue)
 									{
@@ -31,8 +33,6 @@
 									{
 										<span>--</span>
 									}
-									}
-
 								</td>
 							</tr>
 						}

@@ -4,7 +4,7 @@ using Payrollfix_poc.Models;
 
 namespace Payrollfix_poc.Data
 {
-    public class PayRollFix_pocContext:DbContext
+    public class PayRollFix_pocContext : DbContext
     {
         public PayRollFix_pocContext(DbContextOptions<PayRollFix_pocContext> options) : base(options) { }
 
@@ -16,5 +16,8 @@ namespace Payrollfix_poc.Data
         public DbSet<LoginViewModel> LoginViewModel { get; set; }
         public DbSet<Leave> Leaves { get; set; }
         public DbSet<LeaveBalance> LeaveBalances { get; set; }
-	}
+        public DbSet<Timesheet> Timesheets { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
+        public DbSet<Admin> Admin { get; set; }
+    }
 }

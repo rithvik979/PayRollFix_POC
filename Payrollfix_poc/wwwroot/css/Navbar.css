@@ -1,0 +1,84 @@
+﻿/* Sidebar */
+.sidebar {
+    background-color: #00b3a0;
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    color: white;
+    transition: width 0.3s ease; /* Add transition for smooth sliding */
+}
+
+    /* Sidebar collapsed */
+    .sidebar.collapsed {
+        width: 60px; /* Reduced width when collapsed */
+    }
+
+/* Toggle button */
+.toggle-btn {
+    position: fixed;
+    left: 260px;
+    top: 10px;
+    z-index: 100;
+    cursor: pointer;
+    font-size: 20px;
+    background-color: #004f54;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    transition: left 0.3s ease;
+}
+
+.sidebar.collapsed + .toggle-btn {
+    left: 70px; /* Adjust button position when sidebar is collapsed */
+}
+
+/* Hide the text and show icons only when sidebar is collapsed */
+.sidebar.collapsed .list-group-item {
+    text-align: center;
+}
+
+    .sidebar.collapsed .list-group-item i {
+        margin-right: 0;
+    }
+
+    .sidebar.collapsed .list-group-item span {
+        display: none; /* Hide the text */
+    }
+
+/* Logo size reduced when collapsed */
+.sidebar.collapsed .logo img {
+    width: 40px;
+}
+
+/* Sidebar list group item hover and active styles */
+.sidebar .list-group-item {
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    background-color: #00b3a0;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+    .sidebar .list-group-item i {
+        margin-right: 10px;
+    }
+
+    .sidebar .list-group-item:hover,
+    .sidebar .list-group-item.active {
+        background-color: #004f54;
+        color: white;
+    }
+
+.sidebar .logout {
+    margin-top: 20px;
+    background-color: #004f54;
+}
+
+.sidebar .list-group-item.active {
+    background-color: #004f54;
+    font-weight: bold;
+}

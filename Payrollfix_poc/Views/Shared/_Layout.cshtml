@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PayRollFix.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
 </head>
 <body>
     <header class="bg-light py-2">
@@ -23,7 +26,7 @@
                         <a class="nav-link" href="@Url.Action("AboutUs", "Home")">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact Us</a>
+                        <a class="nav-link" href="@Url.Action("ContactUs", "Home")">Contact Us</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Support", "Home")">Support</a>
@@ -39,36 +42,72 @@
         </main>
     </div>
 
-    <footer class="footer bg-dark text-white py-sm-1">
+    <footer class="footer mt-auto py-4" style="background-color: #2c3e50; color: #fff;">
         <div class="container">
             <div class="row">
+                <!-- Logo and description -->
                 <div class="col-md-4">
-                    <h5>Services</h5>
+                    <img src="~/Images/Logo.png" alt="PayrollFix Logo" class="img-fluid mb-3" style="max-width: 150px;">
+                    <p>
+                        It is a long established fact that a reader will be distracted lookings.
+                    </p>
+                    <!-- Social media links -->
+                    <div class="social-links mt-3">
+                        <a href="https://www.facebook.com/" class="me-3"><i class="fab fa-facebook-f" style="color: #fff;"></i></a>
+                        <a href="https://x.com/?lang=en-in" class="me-3"><i class="fab fa-twitter" style="color: #fff;"></i></a>
+                        <a href="https://in.linkedin.com/" class="me-3"><i class="fab fa-linkedin-in" style="color: #fff;"></i></a>
+                        <a href="https://www.instagram.com/?hl=en"><i class="fab fa-instagram" style="color: #fff;"></i></a>
+                    </div>
+                </div>
+
+                <!-- Pages section -->
+                <div class="col-md-2">
+                    <h5 class="mb-3">Pages</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-white">Accounting</a></li>
-                        <li><a href="#" class="text-white">Banking</a></li>
-                        <li><a href="#" class="text-white">Payroll</a></li>
-                        <li><a href="#" class="text-white">Analytics</a></li>
+                        <li><a asp-action="Home" style="color: #fff; text-decoration: none;">Home</a></li>
+                        <li><a asp-action="AboutUs" style="color: #fff; text-decoration: none;">About Us</a></li>
+                        <li><a asp-action="ContactUs" style="color: #fff; text-decoration: none;">Contact Us</a></li>
+                        <li><a asp-action="Support" style="color: #fff; text-decoration: none;">Support</a></li>
+                        <li><a asp-action="AboutUs" style="color: #fff; text-decoration: none;">Services</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <h5>Contact</h5>
-                    <p>86 East Birchwood Ave<br>Brooklyn, New York 11201</p>
-                    <p>Email: <a href="mailto:contact@payrollfix.com" class="text-white">contact@payrollfix.com</a></p>
-                    <p>Phone: <a href="tel:"123456789"0" class="text-white">(123) 456-7890</a></p>
+
+                <!-- Services section -->
+                <div class="col-md-3">
+                    <h5 class="mb-3">Services</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" style="color: #fff; text-decoration: none;">Accounting</a></li>
+                        <li><a href="#" style="color: #fff; text-decoration: none;">Banking</a></li>
+                        <li><a href="#" style="color: #fff; text-decoration: none;">Analytics</a></li>
+                        <li><a href="#" style="color: #fff; text-decoration: none;">Analytics</a></li>
+                        <li><a href="#" style="color: #fff; text-decoration: none;">Analytics</a></li>
+                    </ul>
                 </div>
-                <div class="col-md-4">
-                    <h5>Follow Us</h5>
-                    <div class="social-icons">
-                        <a href="#" class="text-white mr-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white mr-3"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white mr-3"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-white mr-3"><i class="fab fa-instagram"></i></a>
-                    </div>
+
+                <!-- Contact information section -->
+                <div class="col-md-3">
+                    <h5 class="mb-3">Contact</h5>
+                    <p>55 East Birchwood Ave.<br />Brooklyn, New York 11201</p>
+                    <p><a href="mailto:contact@interno.com" style="color: #fff;">contact@interno.com</a></p>
+                    <p>(123) 456 - 7890</p>
+                </div>
+            </div>
+
+            <!-- Footer bottom -->
+            <div class="row mt-4">
+                <div class="col text-center">
+                    <p class="mb-0">
+                        Copyright © All Rights Reserved | Developed by
+                        <a href="https://avtrix.com" style="color: #fff; text-decoration: none;">Rithvik Software Solutions</a>
+                    </p>
                 </div>
             </div>
         </div>
     </footer>
+
+    <!-- FontAwesome for social icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

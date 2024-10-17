@@ -1,0 +1,91 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Our Subscription Plans</h2>
+    <div class="row">
+        <!-- Subscription Plan 1 -->
+        <div class="col-md-4">
+            <div class="card text-center shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="my-0">Basic Plan</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">₹9,999 <small class="text-muted">/ month</small></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>0-100 users included</li>
+                        <li>TIME & Attendance</li>
+                        <li>Email support</li>
+                        <li>Access to all basic features</li>
+                    </ul>
+                    <a href="#" class="btn btn-lg btn-block btn-primary">Get Started</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscription Plan 2 -->
+        <div class="col-md-4">
+            <div class="card text-center shadow-lg">
+                <div class="card-header bg-success text-white">
+                    <h4 class="my-0">Standard Plan</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">₹19,999 <small class="text-muted">/ month</small></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>100-500 users included</li>
+                        <li>Employee Expenses</li>
+                        <li>Priority email support</li>
+                        <li>Access to all Basic plan features</li>
+                    </ul>
+                    <a href="#" class="btn btn-lg btn-block btn-success">Select Plan</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscription Plan 3 -->
+        <div class="col-md-4">
+            <div class="card text-center shadow-lg">
+                <div class="card-header bg-warning text-white">
+                    <h4 class="my-0">Premium Plan</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">₹24,999 <small class="text-muted">/ month</small></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>500-1000 users included</li>
+                        <li>Social Wall</li>
+                        <li>Phone & email support</li>
+                        <li>Access to all Standard features</li>
+                    </ul>
+                    <a href="#" class="btn btn-lg btn-block btn-warning">Choose Premium</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .card {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+    }
+
+    .pricing-card-title {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .btn {
+        font-size: 1.2rem;
+        padding: 10px 20px;
+    }
+
+    .card-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+</style>

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Payrollfix_poc.Models.ExpenseGroupViewModel>
+@{
+    Layout = "~/views/Shared/_EmployeeLayout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <!-- Navbar (Partial View) -->
+        @await Html.PartialAsync("_NavbarPartial")
+        <div class="col-md-10">
+            <h2>This Month's Expenses</h2>
+            <!-- Add Expense Button -->
+            <div>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addExpenseModal">
+                    Add Expense
+                </button>
+            </div>
+
+            @foreach (var monthGroup in Model)
+            {
+                <div class="month-group">
+                    <h4>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(monthGroup.Month) @monthGroup.Year</h4>
+
+                    @foreach (var weekGroup in monthGroup.WeekGroups)
+                    {
+                        <div class="week-group">
+                            <h5>Week @weekGroup.WeekNumber</h5>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Expense Category</th>
+                                        <th>Expense Type</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var expense in weekGroup.Expenses)
+                                    {
+                                        <tr>
+                                            <td>@expense.Category</td>
+                                            <td>@expense.ExpenseType</td>
+                                            <td>@expense.Amount $</td>
+                                            <td>@expense.Date.ToString("dd/MM/yyyy")</td>
+                                            <td>@expense.Status</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Render the _AddExpense partial view here -->
+@Html.Partial("_AddExpense", new Payrollfix_poc.Models.Expense())
+

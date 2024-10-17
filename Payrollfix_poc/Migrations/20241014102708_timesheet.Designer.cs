@@ -12,7 +12,7 @@ using Payrollfix_poc.Data;
 namespace Payrollfix_poc.Migrations
 {
     [DbContext(typeof(PayRollFix_pocContext))]
-    [Migration("20241008055320_timesheet")]
+    [Migration("20241014102708_timesheet")]
     partial class timesheet
     {
         /// <inheritdoc />
@@ -27,16 +27,16 @@ namespace Payrollfix_poc.Migrations
 
             modelBuilder.Entity("Payrollfix_poc.Models.Attandence", b =>
                 {
-                    b.Property<int>("AttandenceId")
+                    b.Property<int>("AttendanceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttandenceId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttendanceId"));
 
-                    b.Property<DateTime>("CheckInTime")
+                    b.Property<DateTime?>("CheckInTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CheckOutTime")
+                    b.Property<DateTime?>("CheckOutTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateOnly>("Date")
@@ -49,10 +49,10 @@ namespace Payrollfix_poc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("WorkHours")
+                    b.Property<float?>("WorkHours")
                         .HasColumnType("real");
 
-                    b.HasKey("AttandenceId");
+                    b.HasKey("AttendanceId");
 
                     b.HasIndex("EmployeeId");
 
@@ -124,8 +124,9 @@ namespace Payrollfix_poc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Phone_no")
-                        .HasColumnType("int");
+                    b.Property<string>("Phone_no")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PositionId")
                         .HasColumnType("int");
@@ -139,6 +140,66 @@ namespace Payrollfix_poc.Migrations
                     b.HasIndex("PositionId");
 
                     b.ToTable("Employee");
+                });
+
+            modelBuilder.Entity("Payrollfix_poc.Models.Leave", b =>
+                {
+                    b.Property<int>("LeaveId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LeaveId"));
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LeaveType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LeaveId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Leaves");
+                });
+
+            modelBuilder.Entity("Payrollfix_poc.Models.LeaveBalance", b =>
+                {
+                    b.Property<int>("BalanceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BalanceId"));
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxDays")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsedDays")
+                        .HasColumnType("int");
+
+                    b.HasKey("BalanceId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("LeaveBalances");
                 });
 
             modelBuilder.Entity("Payrollfix_poc.Models.LoginActivity", b =>
@@ -165,6 +226,26 @@ namespace Payrollfix_poc.Migrations
                     b.ToTable("LoginActivities");
                 });
 
+            modelBuilder.Entity("Payrollfix_poc.Models.LoginViewModel", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("RememberMe")
+                        .HasColumnType("bit");
+
+                    b.HasKey("EmployeeId");
+
+                    b.ToTable("LoginViewModel");
+                });
+
             modelBuilder.Entity("Payrollfix_poc.Models.Position", b =>
                 {
                     b.Property<int>("PositionId")
@@ -182,10 +263,52 @@ namespace Payrollfix_poc.Migrations
                     b.ToTable("Position");
                 });
 
+            modelBuilder.Entity("Payrollfix_poc.Models.TimeSheet", b =>
+                {
+                    b.Property<int>("TimeSheetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TimeSheetId"));
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EmployeeId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EveningHours")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MorningHours")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PastLunchHours")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreLunchHours")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TotalHours")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TimeSheetId");
+
+                    b.HasIndex("EmployeeId1");
+
+                    b.ToTable("TimeSheets");
+                });
+
             modelBuilder.Entity("Payrollfix_poc.Models.Attandence", b =>
                 {
                     b.HasOne("Payrollfix_poc.Models.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Attandences")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -216,6 +339,28 @@ namespace Payrollfix_poc.Migrations
                     b.Navigation("employee");
                 });
 
+            modelBuilder.Entity("Payrollfix_poc.Models.Leave", b =>
+                {
+                    b.HasOne("Payrollfix_poc.Models.Employee", "Employee")
+                        .WithMany("Leaves")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Payrollfix_poc.Models.LeaveBalance", b =>
+                {
+                    b.HasOne("Payrollfix_poc.Models.Employee", "Employee")
+                        .WithMany("LeaveBalances")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("Payrollfix_poc.Models.LoginActivity", b =>
                 {
                     b.HasOne("Payrollfix_poc.Models.Employee", "Employee")
@@ -227,9 +372,28 @@ namespace Payrollfix_poc.Migrations
                     b.Navigation("Employee");
                 });
 
+            modelBuilder.Entity("Payrollfix_poc.Models.TimeSheet", b =>
+                {
+                    b.HasOne("Payrollfix_poc.Models.Employee", "Employee")
+                        .WithMany("TimeSheets")
+                        .HasForeignKey("EmployeeId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("Payrollfix_poc.Models.Employee", b =>
                 {
+                    b.Navigation("Attandences");
+
+                    b.Navigation("LeaveBalances");
+
+                    b.Navigation("Leaves");
+
                     b.Navigation("LoginActivities");
+
+                    b.Navigation("TimeSheets");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
@@ -36,15 +37,16 @@ namespace Payrollfix_poc.Models
         public Department Department { get; set; }
         [AllowNull]
         public Position? Position { get; set; }
-        [Column("Manager")]
         [AllowNull]
-        public Employee? employee { get; set; }
+        public int? ManagerId { get; set; }
+        [ValidateNever]
+        public Employee employee { get; set; }
 
-		public ICollection<LoginActivity> LoginActivities { get; set; }
+        public ICollection<LoginActivity> LoginActivities { get; set; }
 		public ICollection<Attandence> Attandences { get; set; }  // Navigation property for Attendance
         public ICollection<Leave> Leaves { get; set; }
         public ICollection<LeaveBalance> LeaveBalances { get; set; }
-
-
-	}
+        public ICollection<Timesheet> Timesheets { get; set; }
+        public ICollection<Expense> Expenses { get; set; }
+    }
 }
