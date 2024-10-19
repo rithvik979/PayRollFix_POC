@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Payrollfix_poc.Data;
 
@@ -11,9 +12,11 @@ using Payrollfix_poc.Data;
 namespace Payrollfix_poc.Migrations
 {
     [DbContext(typeof(PayRollFix_pocContext))]
-    partial class PayRollFix_pocContextModelSnapshot : ModelSnapshot
+    [Migration("20241019065117_salary")]
+    partial class salary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,7 +112,7 @@ namespace Payrollfix_poc.Migrations
                     b.Property<DateOnly>("DOB")
                         .HasColumnType("date");
 
-                    b.Property<int?>("DepartmentId")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -252,7 +255,7 @@ namespace Payrollfix_poc.Migrations
                     b.Property<int>("MaxDays")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UsedDays")
+                    b.Property<int>("UsedDays")
                         .HasColumnType("int");
 
                     b.HasKey("BalanceId");
@@ -343,7 +346,7 @@ namespace Payrollfix_poc.Migrations
                     b.Property<int>("NetSalary")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalDeductions")
+                    b.Property<int>("TotalDeducions")
                         .HasColumnType("int");
 
                     b.HasKey("SalaryId");
@@ -400,7 +403,9 @@ namespace Payrollfix_poc.Migrations
                 {
                     b.HasOne("Payrollfix_poc.Models.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Payrollfix_poc.Models.Employee", "employee")
                         .WithMany()

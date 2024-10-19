@@ -1,171 +1,210 @@
 ﻿@model Payrollfix_poc.Models.Employee
 
 @{
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";  // If you have a layout
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="container my-4">
-    <div class="row">
-        <!-- Left Column: Employee Image and Status -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    @{
-                        string imagepath = Url.Content("~/images/Employees/"+Model.EmployeeId+".jpg");
-                    }
-                    <img src=@imagepath alt="Employee Image" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
-                    <h5 class="card-title">@Model.FirstName @Model.LastName</h5>
-                    <p class="text-muted">@Model.EmployeeId</p>
-                    <p>Employment End Date: <strong>@Model.JoinDate.ToString("d MMM yyyy")</strong></p>
-                    <p>Status: <span class="badge badge-success">Active</span></p>
-                    <button class="btn btn-danger">End Employment</button>
-                    <button class="btn btn-primary mt-2">View Timesheet</button>
-                </div>
-            </div>
-        </div>
+	<div class="row">
+		<form asp-action="Index" method="post" class="">
+			<div class="form-group">
+				<input type="text" name="name" class="form-control mr-2" placeholder="Enter Employee Name" value="@ViewBag.SearchTerm">
+				<div class="form-card">
+				<button type="submit" class="btn btn-primary top-right-btn">Search</button>
+				</div>
+			</div>
+		</form>
+		<!-- Left Column: Employee Image and Status -->
+		<div class="col-md-4">
+			<div class="card">
+				<div class="card-body text-center">
+					@{
+						string imagepath = Url.Content("~/images/Employees/" + Model.EmployeeId + ".jpg");
+					}
+					<img src=@imagepath alt="Employee Image" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
+					<h5 class="card-title">@Model.FirstName @Model.LastName</h5>
+					<p class="text-muted">@Model.EmployeeId</p>
+					<p>Joining Date: <strong>@Model.JoinDate.ToString("d MMM yyyy")</strong></p>
+					<p>Status: <span class="badge badge-success">Active</span></p>
+					<button class="btn btn-primary" onclick="location.href='@Url.Action("EditEmployee", "Admin", new { id = Model.EmployeeId })'">Edit Employee</button>
+					<p></p>
+					<button class="btn btn-primary mt-2" onclick="location.href='@Url.Action("TimeSheet", "Admin", new { id = Model.EmployeeId })'">View Timesheet</button>
+					<p></p>
+					<a asp-action="CreateEmployee" class="btn btn-success">Create Employee</a>
 
-        <!-- Right Column: Basic Info, Company Details, Leaves, Payslips, Bank Details -->
-        <div class="col-md-8">
-            <!-- Basic and Company Information -->
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="font-weight-bold">Basic Information</h6>
-                        </div>
-                        <div class="card-body">
-                            <p><strong>First Name: </strong>@Model.FirstName</p>
-                            <p><strong>Last Name: </strong>@Model.LastName</p>
-                            <p><strong>Gender: </strong>@Model.Gender</p>
-                            <p><strong>DOB: </strong>@Model.DOB.ToString("dd/MM/yyyy")</p>
-                            <p><strong>Phone: </strong>@Model.Phone_no</p>
-                            <p><strong>Email: </strong>@Model.Email</p>
-                            <p><strong>Address: </strong>@Model.Address</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="font-weight-bold">Company Details</h6>
-                        </div>
-                        <div class="card-body">
-                            <p><strong>Employee ID: </strong>@Model.EmployeeId</p>
-                            <p><strong>Job Title: </strong>@Model.Position</p>
-                            <p><strong>Annual Pay: </strong>45LPA</p>
-                            <p><strong>Date of Joining: </strong>@Model.JoinDate.ToString("dd-MM-yyyy")</p>
-                            <p><strong>Employee Department: </strong>@Model.Department?</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+				</div>
+			</div>
+		</div>
 
-            <!-- Leaves Section -->
-            <div class="card mb-4">
-                <div class="card-header bg-light d-flex justify-content-between">
-                    <h6 class="font-weight-bold">Leaves</h6>
-                    <button class="btn btn-link">View More</button>
-                </div>
-                <div class="card-body">
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th>Leave Type</th>
-                                <th>This Year</th>
-                                <th>Carry Forward</th>
-                                <th>Total Leaves</th>
-                                <th>Used</th>
-                                <th>Available</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Annual Leaves</td>
-                                <td>160 H</td>
-                                <td>4 H</td>
-                                <td>44 H</td>
-                                <td>28 H</td>
-                                <td>20 H</td>
-                            </tr>
-                            <tr>
-                                <td>Sick Leaves</td>
-                                <td>10 H</td>
-                                <td>0 H</td>
-                                <td>10 H</td>
-                                <td>6 H</td>
-                                <td>4 H</td>
-                            </tr>
-                            <!-- More Rows -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+		<!-- Right Column: Basic Info, Company Details, Leaves, Payslips, Bank Details -->
+		<div class="col-md-8">
+			<!-- Basic and Company Information -->
+			<div class="row">
+				<div class="col-md-6">
+					<div class="card mb-4">
+						<div class="card-header bg-light">
+							<h6 class="font-weight-bold">Basic Information</h6>
+						</div>
+						<div class="card-body">
+							<p><strong>First Name: </strong>@Model.FirstName</p>
+							<p><strong>Last Name: </strong>@Model.LastName</p>
+							<p><strong>Gender: </strong>@Model.Gender</p>
+							<p><strong>DOB: </strong>@Model.DOB.ToString("dd/MM/yyyy")</p>
+							<p><strong>Phone: </strong>@Model.Phone_no</p>
+							<p><strong>Email: </strong>@Model.Email</p>
+							<p><strong>Address: </strong>@Model.Address</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card mb-4">
+						<div class="card-header bg-light">
+							<h6 class="font-weight-bold">Company Details</h6>
+						</div>
+						<div class="card-body">
+							<p><strong>Employee ID: </strong>@Model.EmployeeId</p>
+							<p><strong>Job Title: </strong>@Model.Position</p>
+							<p><strong>Annual Pay: </strong>45LPA</p>
+							<p><strong>Date of Joining: </strong>@Model.JoinDate.ToString("dd-MM-yyyy")</p>
+							<p><strong>Employee Department: </strong>@Model.Department?</p>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <!-- Payslips Section -->
-            <div class="card mb-4">
-                <div class="card-header bg-light d-flex justify-content-between">
-                    <h6 class="font-weight-bold">Payslips</h6>
-                    <button class="btn btn-link">View More</button>
-                </div>
-                <div class="card-body">
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th>Duration</th>
-                                <th>Gross Salary</th>
-                                <th>Deductions</th>
-                                <th>Net Salary</th>
-                                <th>Issue Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>01-Dec-2022 to 01-Dec-2022</td>
-                                <td>₹6,30,000</td>
-                                <td>₹30,000</td>
-                                <td>₹60,000</td>
-                                <td>05-Jan-2022</td>
-                            </tr>
-                            <!-- More Rows -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+			<!-- Leaves Section -->
+			<div class="card mb-4">
+				<div class="card-header bg-light d-flex justify-content-between">
+					<h6 class="font-weight-bold">Leaves</h6>
+					<button class="btn btn-link">View More</button>
+				</div>
+				<div class="card-body">
+					<table class="table table-sm">
+						<thead>
+							<tr>
+								<th>Leave Type</th>
+								<th>Start Date</th>
+								<th>End Date</th>
+								<th>Status</th>
+								<th>Reason</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var leave in Model.Leaves)
+							{
+								<tr>
+									<td>@leave.LeaveType</td>
+									<td>@leave.StartDate.ToString("dd MMM yyyy")</td>
+									<td>@leave.EndDate.ToString("dd MMM yyyy")</td>
+									<td>@leave.Status</td>
+									<td>@leave.Reason</td>
+								</tr>
+							}
+							<!-- More Rows -->
+						</tbody>
+					</table>
+				</div>
+			</div>
 
-            <!-- Bank Details Section -->
-            <div class="card mb-4">
-                <div class="card-header bg-light d-flex justify-content-between">
-                    <h6 class="font-weight-bold">Bank Details</h6>
-                    <button class="btn btn-link">View More</button>
-                </div>
-                <div class="card-body">
-                    <p><strong>Bank Name: </strong>HDFC</p>
-                    <p><strong>Account Number: </strong>0000 0000 0000 1000</p>
-                </div>
-            </div>
-        </div>
-    </div>
+			<!-- Payslips Section -->
+			<div class="card mb-4">
+				<div class="card-header bg-light d-flex justify-content-between">
+					<h6 class="font-weight-bold">Payslips</h6>
+					<button class="btn btn-link">View More</button>
+				</div>
+				<div class="card-body">
+					<table class="table table-sm">
+						<thead>
+							<tr>
+								<th>Duration</th>
+								<th>Gross Salary</th>
+								<th>Deductions</th>
+								<th>Net Salary</th>
+								<th>Issue Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>01-Dec-2022 to 01-Dec-2022</td>
+								<td>₹6,30,000</td>
+								<td>₹30,000</td>
+								<td>₹60,000</td>
+								<td>05-Jan-2022</td>
+							</tr>
+							<!-- More Rows -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Bank Details Section -->
+			<div class="card mb-4">
+				<div class="card-header bg-light d-flex justify-content-between">
+					<h6 class="font-weight-bold">Bank Details</h6>
+					<button class="btn btn-link">View More</button>
+				</div>
+				<div class="card-body">
+					<p><strong>Bank Name: </strong>HDFC</p>
+					<p><strong>Account Number: </strong>0000 0000 0000 1000</p>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <style>
-    .card-header {
-        background-color: #f0f8ff; /* Light blue */
-        font-weight: bold;
-    }
+	/* Form card styles (unchanged from previous design) */
+	.form-card {
+		background-color: white;
+		padding: 30px;
+		border-radius: 10px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		position: relative; /* To position the button relative to the form */
+	}
 
-    .badge-success {
-        background-color: #28a745; /* Green badge */
-    }
+	/* Form title and content */
+	.form-title {
+		font-size: 24px;
+		font-weight: bold;
+		margin-bottom: 20px;
+	}
 
-    .table th, .table td {
-        text-align: center;
-        vertical-align: middle;
-    }
+	/* Top-right button styles */
+	.top-right-btn {
+		position: absolute;
+		top: 20px;
+		right: 20px;
+		background-color: #28a745;
+		color: white;
+		border: none;
+		padding: 10px 15px;
+		border-radius: 5px;
+		font-weight: bold;
+	}
+
+		.top-right-btn:hover {
+			background-color: #218838;
+		}
+
+
+	.card-header {
+		background-color: #f0f8ff; /* Light blue */
+		font-weight: bold;
+	}
+
+	.badge-success {
+		background-color: #28a745; /* Green badge */
+	}
+
+	.table th, .table td {
+		text-align: center;
+		vertical-align: middle;
+	}
 </style>
 <script>
-    $(document).ready(function() {
-        $(".btn-link").on("click", function() {
-            $(this).closest('.card').find('.card-body').toggle();
-        });
-    });
+	$(document).ready(function () {
+		$(".btn-link").on("click", function () {
+			$(this).closest('.card').find('.card-body').toggle();
+		});
+	});
 </script>

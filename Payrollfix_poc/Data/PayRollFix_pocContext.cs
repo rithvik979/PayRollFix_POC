@@ -19,5 +19,6 @@ namespace Payrollfix_poc.Data
         public DbSet<Timesheet> Timesheets { get; set; }
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Admin> Admin { get; set; }
+        public DbSet<Salary> Salary { get; set; }
     }
 }

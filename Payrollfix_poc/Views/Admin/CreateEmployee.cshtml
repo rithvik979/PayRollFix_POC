@@ -1,0 +1,184 @@
+﻿@model Payrollfix_poc.Models.Employee
+@{
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+	ViewData["Title"] = "Add Employee";
+}
+<div class="container">
+	<div class="form-wrapper">
+		<!-- Side menu -->
+		<div class="side-menu">
+			<ul>
+				<li class="active">Personal Details</li>
+				<li>Salary Info</li>
+				<li>Department Details</li>
+				<li>Taxes</li>
+				<li>Payment Info</li>
+				<li>Payslips</li>
+				<li>Notes</li>
+			</ul>
+		</div>
+
+		<div class="form-container">
+			<h2>Personal Details</h2>
+			<form asp-action="CreateEmployee" method="post">
+				@Html.AntiForgeryToken()
+
+				<div class="form-row">
+					<div class="form-group">
+						@Html.LabelFor(m => m.FirstName)
+						@Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m => m.FirstName)
+					</div>
+
+					<div class="form-group">
+						@Html.LabelFor(m => m.LastName)
+						@Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m => m.LastName)
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="form-group">
+						@Html.LabelFor(m => m.Email)
+						@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m => m.Email)
+					</div>
+
+					<div class="form-group">
+						@Html.LabelFor(m => m.Phone_no)
+						@Html.TextBoxFor(m => m.Phone_no, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m => m.Phone_no)
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="form-group">
+						@Html.LabelFor(m => m.Password)
+						@Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m => m.Password)
+					</div>
+
+					<div class="form-group">
+						@Html.LabelFor(m => m.Address)
+						@Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m => m.Address)
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="form-group">
+						@Html.LabelFor(m => m.DOB)
+						@Html.TextBoxFor(m => m.DOB, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+						@Html.ValidationMessageFor(m => m.DOB)
+					</div>
+
+					<div class="form-group">
+						@Html.LabelFor(m => m.Gender, "Gender")
+						<div>
+							@Html.RadioButtonFor(m => m.Gender, "Male") Male
+							@Html.RadioButtonFor(m => m.Gender, "Female") Female
+						</div>
+						@Html.ValidationMessageFor(m => m.Gender)
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="form-group">
+						@Html.LabelFor(m => m.JoinDate)
+						@Html.TextBoxFor(m => m.JoinDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+						@Html.ValidationMessageFor(m => m.JoinDate)
+					</div>
+				</div>
+
+				<button type="submit" class="btn btn-primary">Next: Add Salary & Leaves</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<style>
+	body {
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		background-color: #f4f8fc;
+		margin: 0;
+		padding: 0;
+	}
+
+	.container {
+		padding: 20px;
+	}
+
+	.form-wrapper {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.form-container {
+		background-color: white;
+		padding: 30px;
+		border-radius: 10px;
+		width: 80%; /* Increased width for more space */
+		margin-left: auto;
+		margin-right: auto;
+		box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+	}
+
+	.side-menu {
+		width: 20%;
+		margin-right: 20px;
+	}
+
+		.side-menu ul {
+			list-style-type: none;
+			padding: 0;
+		}
+
+			.side-menu ul li {
+				background-color: #ffebec;
+				margin-bottom: 10px;
+				padding: 10px;
+				border-radius: 5px;
+				color: #ff5a60;
+			}
+
+				.side-menu ul li.active {
+					background-color: #ff5a60;
+					color: white;
+				}
+	.form-container {
+		width: 70%;
+		margin: 0 auto;
+		padding: 20px;
+		background-color: #fff;
+		border-radius: 10px;
+		box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+	}
+
+	.form-row {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.form-group {
+		width: 48%;
+		margin-bottom: 20px;
+	}
+
+	.btn {
+		background-color: #ff5a60;
+		border: none;
+		padding: 10px 20px;
+		color: white;
+		cursor: pointer;
+	}
+
+		.btn:hover {
+			background-color: #ff4248;
+		}
+
+	h2 {
+		margin-bottom: 20px;
+	}
+</style>

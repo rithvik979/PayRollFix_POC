@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Payrollfix_poc.Data;
 
@@ -11,9 +12,11 @@ using Payrollfix_poc.Data;
 namespace Payrollfix_poc.Migrations
 {
     [DbContext(typeof(PayRollFix_pocContext))]
-    partial class PayRollFix_pocContextModelSnapshot : ModelSnapshot
+    [Migration("20241019113051_leavebalance1")]
+    partial class leavebalance1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -343,7 +346,7 @@ namespace Payrollfix_poc.Migrations
                     b.Property<int>("NetSalary")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalDeductions")
+                    b.Property<int>("TotalDeducions")
                         .HasColumnType("int");
 
                     b.HasKey("SalaryId");

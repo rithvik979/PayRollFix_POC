@@ -1,0 +1,184 @@
+﻿@model Payrollfix_poc.Models.Salary
+@{
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container">
+	<div class="form-wrapper">
+		<!-- Side menu -->
+		<div class="side-menu">
+			<ul>
+				<li>Personal Details</li>
+				<li class="active">Salary Info</li>
+				<li>Department Details</li>
+				<li>Taxes</li>
+				<li>Payment Info</li>
+				<li>Payslips</li>
+				<li>Notes</li>
+			</ul>
+		</div>
+
+		<div class="form-container">
+			<h2>Add Salary and Leave Details</h2>
+			<form asp-action="CreateSalaryLeave" method="post">
+				@Html.AntiForgeryToken()
+
+				<!-- EmployeeId -->
+				<div class="form-group">
+					@Html.LabelFor(model => model.EmployeeId, "EmployeeId")
+					@Html.HiddenFor(model => model.EmployeeId) <!-- Hidden input for EmployeeId -->
+					<input type="text" value="@Model.EmployeeId" class="form-control" readonly />
+				</div>
+
+				<!-- Basic Salary -->
+				<div class="form-group">
+					@Html.LabelFor(model => model.BasicSalary, "Basic Salary")
+					@Html.TextBoxFor(model => model.BasicSalary, new { @class = "form-control", id = "basicSalary", oninput = "calculateSalary()" })
+					@Html.ValidationMessageFor(model => model.BasicSalary)
+				</div>
+
+				<!-- Total Deductions (12% of Basic Salary) -->
+				<div class="form-group">
+					@Html.LabelFor(model => model.TotalDeductions, "Total Deductions")
+					@Html.HiddenFor(model => model.TotalDeductions) <!-- Bind Total Deductions to the model -->
+					<input type="text" id="totalDeductions" class="form-control" readonly />
+				</div>
+
+				<!-- Net Salary (Basic Salary - Total Deductions) -->
+				<div class="form-group">
+					@Html.LabelFor(model => model.NetSalary, "Net Salary")
+					@Html.HiddenFor(model => model.NetSalary) <!-- Bind Net Salary to the model -->
+					<input type="text" id="netSalary" class="form-control" readonly />
+				</div>
+
+				<!-- Monthly Salary (1/12th of Net Salary) -->
+				<div class="form-group">
+					@Html.LabelFor(model => model.MonthySalary, "Monthly Salary")
+					@Html.HiddenFor(model => model.MonthySalary) <!-- Bind Monthly Salary to the model -->
+					<input type="text" id="monthlySalary" class="form-control" readonly />
+				</div>
+
+				<!-- Submit Button -->
+				<button type="submit" class="btn btn-primary">Save</button>
+			</form>
+
+		</div>
+
+		<script>
+			function calculateSalary() {
+				var basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
+				var totalDeductions = basicSalary * 0.12;
+				var netSalary = basicSalary - totalDeductions;
+				var monthlySalary = netSalary / 12;
+
+				document.getElementById('totalDeductions').value = totalDeductions.toFixed(2);
+				document.getElementById('netSalary').value = netSalary.toFixed(2);
+				document.getElementById('monthlySalary').value = monthlySalary.toFixed(2);
+			}
+		</script>
+
+		<style>
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background-color: #f4f8fc;
+				margin: 0;
+				padding: 0;
+			}
+
+			.form-wrapper {
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.form-container {
+				background-color: white;
+				padding: 30px;
+				border-radius: 10px;
+				width: 80%; /* Increased width for more space */
+				margin-left: auto;
+				margin-right: auto;
+				box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+			}
+
+			.side-menu {
+				width: 20%;
+				margin-right: 20px;
+			}
+
+				.side-menu ul {
+					list-style-type: none;
+					padding: 0;
+				}
+
+					.side-menu ul li {
+						background-color: #ffebec;
+						margin-bottom: 10px;
+						padding: 10px;
+						border-radius: 5px;
+						color: #ff5a60;
+					}
+
+						.side-menu ul li.active {
+							background-color: #ff5a60;
+							color: white;
+						}
+
+			.container {
+				max-width: 800px;
+				margin: 40px auto;
+				background-color: #fff;
+				border-radius: 8px;
+				padding: 20px;
+				box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+			}
+
+			h2 {
+				color: #343a40;
+				font-size: 24px;
+				margin-bottom: 20px;
+				text-align: center;
+			}
+
+			.form-group {
+				margin-bottom: 15px;
+			}
+
+				.form-group label {
+					font-size: 14px;
+					color: #495057;
+				}
+
+			.form-control {
+				width: 100%;
+				padding: 10px;
+				border: 1px solid #ced4da;
+				border-radius: 4px;
+				font-size: 14px;
+				color: #495057;
+			}
+
+				.form-control:focus {
+					border-color: #80bdff;
+					outline: none;
+				}
+
+			.submit-btn {
+				background-color: #28a745;
+				color: white;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				float: right;
+			}
+
+				.submit-btn:hover {
+					background-color: #218838;
+				}
+
+			.clearfix::after {
+				content: "";
+				display: table;
+				clear: both;
+			}
+		</style>

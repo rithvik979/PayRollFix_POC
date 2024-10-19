@@ -13,7 +13,9 @@
             <form asp-action="Organization" method="get" class="">
                 <div class="form-group">
                     <input type="text" name="name" class="form-control mr-2" placeholder="Enter Employee Name" value="@ViewBag.SearchTerm">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <div class="form-card">
+                    <button type="submit" class="btn btn-primary top-right-btn">Search</button>
+                    </div>
                 </div>
             </form>
             <div class="mb-3">
@@ -55,10 +57,37 @@
 
 <!-- Custom CSS to match color scheme -->
 <style>
-    .card {
+    .form-card {
+        background-color: white;
+        padding: 30px;
         border-radius: 10px;
-        background-color: #f8f9fa;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative; /* To position the button relative to the form */
     }
+
+    /* Form title and content */
+    .form-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    /* Top-right button styles */
+    .top-right-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+        .top-right-btn:hover {
+            background-color: #218838;
+        }
 
     .card-title {
         color: #007bff;

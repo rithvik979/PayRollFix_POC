@@ -33,20 +33,28 @@ namespace Payrollfix_poc.Models
         [DataType(DataType.Date)]
         [Required]
         public DateOnly JoinDate { get; set; }
-        [Required]
-        public Department Department { get; set; }
+        [AllowNull]
+        public Department? Department { get; set; }
         [AllowNull]
         public Position? Position { get; set; }
-        [AllowNull]
+		[AllowNull]
         public int? ManagerId { get; set; }
         [ValidateNever]
         public Employee employee { get; set; }
 
+        [ValidateNever]
         public ICollection<LoginActivity> LoginActivities { get; set; }
+        [ValidateNever]
 		public ICollection<Attandence> Attandences { get; set; }  // Navigation property for Attendance
+        [ValidateNever]
         public ICollection<Leave> Leaves { get; set; }
+        [ValidateNever]
         public ICollection<LeaveBalance> LeaveBalances { get; set; }
+        [ValidateNever]
         public ICollection<Timesheet> Timesheets { get; set; }
+        [ValidateNever]
         public ICollection<Expense> Expenses { get; set; }
+        [ValidateNever]
+        public ICollection<Salary> Salarys { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Payrollfix_poc.Models
 {
@@ -8,9 +7,9 @@ namespace Payrollfix_poc.Models
     {
         [Key]
         public int BalanceId {  get; set; }
-        public int UsedDays { get; set; }
-        public int MaxDays { get; set; }
-        [ForeignKey("EmployeeId")]
+        public int? UsedDays { get; set; }
+        public int MaxDays { get; set; } = 2;
+        [Required]
         public int EmployeeId {  get; set; }
         [ValidateNever]
         public Employee Employee { get; set; }
