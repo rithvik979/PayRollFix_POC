@@ -9,10 +9,11 @@
 
 <div class="container">
 	<div class="row">
-		@await Html.PartialAsync("_NavbarPartial")
-
+		<div class="col-lg-2 col-md-3 col-12">
+			@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+		</div>
 		<!-- Employee Search Form -->
-		<div class="col-md-10">
+		<div class="col-lg-10 col-md-9 col-12">
 			<h2>Timesheet List</h2>
 			<div class="mb-3">
 				<a asp-action="Create" class="btn btn-primary">Add Timesheet</a>
@@ -25,6 +26,7 @@
 						<th>Hours Worked</th>
 						<th>Description</th>
 						<th>Actions</th>
+						<th>Status</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -35,9 +37,18 @@
 							<td>@timesheet.HoursWorked</td>
 							<td>@timesheet.Description</td>
 							<td>
-								<a asp-action="Edit" asp-route-id="@timesheet.TimesheetId" class="btn btn-warning">Edit</a>
-								<a asp-action="Delete" asp-route-id="@timesheet.TimesheetId" class="btn btn-danger">Delete</a>
+								@if (timesheet.CreatedAt.Date >= DateTime.Today)
+								{
+									<a asp-action="Edit" asp-route-id="@timesheet.TimesheetId" class="btn btn-warning">Edit</a>
+									<a asp-action="Delete" asp-route-id="@timesheet.TimesheetId" class="btn btn-danger">Delete</a>
+								}
+								else
+								{
+									<a class="btn visually-hidden-focusable"> Edit</a>
+									<a class="btn visually-hidden-focusable"> Delete</a>
+								}
 							</td>
+							<td>@timesheet.Status</td>
 						</tr>
 					}
 				</tbody>
@@ -67,5 +78,24 @@
 
 		.btn-primary:hover, .btn-warning:hover, .btn-danger:hover {
 			opacity: 0.8;
+		}
+
+	.table {
+		width: 100%;
+		margin-top: 15px;
+		border-collapse: separate;
+		border-spacing: 0 10px; /* Add spacing between rows */
+	}
+
+		.table th {
+			font-weight: bold;
+			color: #666;
+			text-align: left;
+		}
+
+		.table td {
+			background-color: white;
+			padding: 10px;
+			border-radius: 8px;
 		}
 </style>

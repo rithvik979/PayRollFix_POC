@@ -5,6 +5,15 @@ using Payrollfix_poc.Models;
 
 namespace Payrollfix_poc.Controllers
 {
+	/// <summary>
+	/// This is Controller Contains 6 action Methods:
+	/// <para><see cref="Index(string)"/>- this method returns all the data of the employee to Index view </para>
+	/// <para><see cref="CreateEmployee()"/>this method will create a employee using the basic details in the database</para>
+	/// <para><see cref="CreateSalaryLeave(int)"/>this method is excecuted following the CreateEmployee in this </para>
+	/// <para><see cref="EditEmployee(Employee)"/></para>
+	/// <para><see cref="UploadImage(int, IFormFile)"/></para>
+	/// <para><see cref="TimeSheet(int)"/></para>
+	/// </summary>
 	public class AdminController : Controller
 	{
 		public readonly PayRollFix_pocContext _context;
@@ -103,12 +112,54 @@ namespace Payrollfix_poc.Controllers
 				};
 
 				_context.Salary.Add(salary);
-				_context.SaveChanges();  // Save the salary record
 
-				return RedirectToAction("Index");  // Or any other appropriate action
+				var Leavebalance = new LeaveBalance
+				{
+					EmployeeId = model.EmployeeId,
+					MaxDays = 2,
+					UsedDays = 0
+				};
+				_context.LeaveBalances.Add(Leavebalance);
+				_context.SaveChanges();  // Save the salary & LeaveBalance record
+
+				int empid=model.EmployeeId;
+				return RedirectToAction("UploadImage", new { employeeId = empid });
 			}
 
 			return View(model);
+		}
+
+		public IActionResult UploadImage(int employeeId)
+		{
+			EmployeeImage image = new EmployeeImage { EmployeeId = employeeId };
+			return View(image);
+		}
+
+		// POST: Upload Image
+		[HttpPost]
+		public async Task<IActionResult> UploadImage(int employeeId, IFormFile imageFile)
+		{
+			if (imageFile != null && imageFile.Length > 0)
+			{
+				using (var memoryStream = new MemoryStream())
+				{
+					await imageFile.CopyToAsync(memoryStream);
+					var employeeImage = new EmployeeImage
+					{
+						EmployeeId = employeeId,
+						Image = memoryStream.ToArray(),
+						ImageName = imageFile.FileName,
+						ContentType = imageFile.ContentType
+					};
+
+					_context.EmployeeImage.Add(employeeImage);
+					await _context.SaveChangesAsync();
+				}
+
+				return RedirectToAction("Index", new { id = employeeId });
+			}
+
+			return View();
 		}
 
 		[HttpGet]
@@ -163,5 +214,6 @@ namespace Payrollfix_poc.Controllers
 
 			return View(timesheets);
 		}
-	}
+
+    }
 }

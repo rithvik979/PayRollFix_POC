@@ -1,4 +1,5 @@
-﻿@model Payrollfix_poc.Models.Salary
+﻿@model Payrollfix_poc.Models.EmployeeImage
+
 @{
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
@@ -9,8 +10,8 @@
 		<div class="side-menu">
 			<ul>
 				<li>Personal Details</li>
-				<li class="active">Salary Info</li>
-				<li>Department Details</li>
+				<li>Salary Info</li>
+				<li class="active">Upload Image</li>
 				<li>Taxes</li>
 				<li>Payment Info</li>
 				<li>Payslips</li>
@@ -19,64 +20,30 @@
 		</div>
 
 		<div class="form-container">
-			<h2>Add Salary and Leave Details</h2>
-			<form asp-action="CreateSalaryLeave" method="post">
+			<h2>Upload Image for Employee @Model.EmployeeId</h2>
+
+			<form asp-action="UploadImage" asp-controller="Admin" method="post" enctype="multipart/form-data">
 				@Html.AntiForgeryToken()
 
 				<!-- EmployeeId -->
 				<div class="form-group">
-					@Html.LabelFor(model => model.EmployeeId, "EmployeeId")
-					@Html.HiddenFor(model => model.EmployeeId) <!-- Hidden input for EmployeeId -->
+					<label for="employeeId">Employee ID</label>
 					<input type="text" value="@Model.EmployeeId" class="form-control" readonly />
+					<input type="hidden" name="employeeId" value="@Model.EmployeeId" />
 				</div>
 
-				<!-- Basic Salary -->
+				<!-- Image File Upload -->
 				<div class="form-group">
-					@Html.LabelFor(model => model.BasicSalary, "Basic Salary")
-					@Html.TextBoxFor(model => model.BasicSalary, new { @class = "form-control", id = "basicSalary", oninput = "calculateSalary()" })
-					@Html.ValidationMessageFor(model => model.BasicSalary)
-				</div>
-
-				<!-- Total Deductions (12% of Basic Salary) -->
-				<div class="form-group">
-					@Html.LabelFor(model => model.TotalDeductions, "Total Deductions")
-					@Html.HiddenFor(model => model.TotalDeductions) <!-- Bind Total Deductions to the model -->
-					<input type="text" id="totalDeductions" class="form-control" readonly />
-				</div>
-
-				<!-- Net Salary (Basic Salary - Total Deductions) -->
-				<div class="form-group">
-					@Html.LabelFor(model => model.NetSalary, "Net Salary")
-					@Html.HiddenFor(model => model.NetSalary) <!-- Bind Net Salary to the model -->
-					<input type="text" id="netSalary" class="form-control" readonly />
-				</div>
-
-				<!-- Monthly Salary (1/12th of Net Salary) -->
-				<div class="form-group">
-					@Html.LabelFor(model => model.MonthySalary, "Monthly Salary")
-					@Html.HiddenFor(model => model.MonthySalary) <!-- Bind Monthly Salary to the model -->
-					<input type="text" id="monthlySalary" class="form-control" readonly />
+					<label for="imageFile">Upload Image</label>
+					<input type="file" name="imageFile" class="form-control" />
 				</div>
 
 				<!-- Submit Button -->
-				<button type="submit" class="btn btn-primary">Next</button>
+				<button type="submit" class="btn btn-primary">Upload</button>
 			</form>
-
 		</div>
 	</div>
 </div>
-<script>
-	function calculateSalary() {
-		var basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
-		var totalDeductions = basicSalary * 0.12;
-		var netSalary = basicSalary - totalDeductions;
-		var monthlySalary = netSalary / 12;
-
-		document.getElementById('totalDeductions').value = totalDeductions.toFixed(2);
-		document.getElementById('netSalary').value = netSalary.toFixed(2);
-		document.getElementById('monthlySalary').value = monthlySalary.toFixed(2);
-	}
-</script>
 
 <style>
 	body {

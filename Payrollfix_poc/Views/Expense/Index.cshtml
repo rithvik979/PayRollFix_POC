@@ -1,12 +1,14 @@
-﻿@model IEnumerable<Payrollfix_poc.Models.ExpenseGroupViewModel>
+﻿@model IEnumerable<Payrollfix_poc.ViewModels.ExpenseGroupViewModel>
 @{
     Layout = "~/views/Shared/_EmployeeLayout.cshtml";
 }
 <div class="container">
     <div class="row">
         <!-- Navbar (Partial View) -->
-        @await Html.PartialAsync("_NavbarPartial")
-        <div class="col-md-10">
+        <div class="col-lg-2 col-md-3 col-12">
+            @await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+        </div>
+        <div class="col-lg-10 col-md-9 col-12">
             <h2>This Month's Expenses</h2>
             <!-- Add Expense Button -->
             <div>
@@ -59,3 +61,23 @@
 <!-- Render the _AddExpense partial view here -->
 @Html.Partial("_AddExpense", new Payrollfix_poc.Models.Expense())
 
+<style>
+    .table {
+        width: 100%;
+        margin-top: 15px;
+        border-collapse: separate;
+        border-spacing: 0 10px; /* Add spacing between rows */
+    }
+
+        .table th {
+            font-weight: bold;
+            color: #666;
+            text-align: left;
+        }
+
+        .table td {
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+</style>

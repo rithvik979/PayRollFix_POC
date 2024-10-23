@@ -102,5 +102,54 @@ namespace Payrollfix_poc.Controllers
 			_context.SaveChanges();
 			return RedirectToAction("TimesheetList");
 		}
+
+		public IActionResult Permission(int employeeId)
+		{
+			var employee = _context.Employee
+				.Include(e => e.Timesheets)
+				.FirstOrDefault(e => e.EmployeeId == employeeId);
+
+			if (employee == null)
+			{
+				return NotFound();
+			}
+
+			var pendingLeaves = employee.Timesheets
+				.Where(t => t.Status == "Pending")
+				.ToList();
+
+			return View(pendingLeaves);
+		}
+		[HttpPost]
+		public IActionResult ApproveTimesheet(int sheetId)
+		{
+			var timesheet = _context.Timesheets.FirstOrDefault(t => t.TimesheetId == sheetId);
+			if (timesheet == null)
+			{
+				return NotFound();
+			}
+
+			// Approve the leave and save changes
+			timesheet.Status = "Approved";
+			_context.SaveChanges();
+
+			return RedirectToAction("Permission", new { employeeId = timesheet.EmployeeId });
+		}
+		// Action to reject leave
+		[HttpPost]
+		public IActionResult RejectTimesheet(int sheetId)
+		{
+			var timesheet = _context.Timesheets.FirstOrDefault(t => t.TimesheetId == sheetId);
+			if (timesheet == null)
+			{
+				return NotFound();
+			}
+
+			// Reject the leave and save changes
+			timesheet.Status = "Rejected";
+			_context.SaveChanges();
+
+			return RedirectToAction("Permission", new { employeeId = timesheet.EmployeeId });
+		}
 	}
 }

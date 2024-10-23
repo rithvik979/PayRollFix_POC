@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Payrollfix_poc.Models;
+using Payrollfix_poc.ViewModels;
 
 namespace Payrollfix_poc.Data
 {
@@ -20,5 +21,6 @@ namespace Payrollfix_poc.Data
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Admin> Admin { get; set; }
         public DbSet<Salary> Salary { get; set; }
+        public DbSet<EmployeeImage> EmployeeImage { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model Payrollfix_poc.Models.LoginViewModel
+﻿@model Payrollfix_poc.ViewModels.LoginViewModel
 @{
     ViewData["Title"] = "Login";
 }
@@ -127,11 +127,11 @@
             <h2 id="loginTitle">Admin Login</h2>
             <form id="loginForm" method="POST">
                 @Html.AntiForgeryToken()
-                <input type="text" name="Id" id="username" placeholder="Username" required>
+                <input type="text" name="Id" id="username" placeholder="EmployeeId" required>
                 <input type="password" name="password" placeholder="Password" required>
-                <a href="/ForgotPassword">Forgot Password?</a>
+                <a asp-action="ForgotPassword">Forgot Password?</a>
                 <button type="submit">Login</button>
-                <p class="signup">Don't have an Account? <a href="/Signup">Signup for free.</a></p>
+                <p class="signup">Don't have an Account? <a asp-action="Subscription">Signup for free.</a></p>
             </form>
         </div>
     </div>

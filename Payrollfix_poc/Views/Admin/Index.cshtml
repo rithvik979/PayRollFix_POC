@@ -18,10 +18,7 @@
 		<div class="col-md-4">
 			<div class="card">
 				<div class="card-body text-center">
-					@{
-						string imagepath = Url.Content("~/images/Employees/" + Model.EmployeeId + ".jpg");
-					}
-					<img src=@imagepath alt="Employee Image" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
+					<img src="@Url.Action("GetImageById", "Home", new {employeeId = Model.EmployeeId})" alt="Employee Image" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
 					<h5 class="card-title">@Model.FirstName @Model.LastName</h5>
 					<p class="text-muted">@Model.EmployeeId</p>
 					<p>Joining Date: <strong>@Model.JoinDate.ToString("d MMM yyyy")</strong></p>

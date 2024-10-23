@@ -6,9 +6,10 @@
 
 <div class="container">
 	<div class="row">
-		@await Html.PartialAsync("_NavbarPartial")
-
-		<div class="col-md-10">
+		<div class="col-lg-2 col-md-3 col-12">
+			@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+		</div>
+		<div class="col-lg-10 col-md-9 col-12">
 			<div id="orgchart_div" style="width: 100%; height: 800px;"></div> <!-- Larger container -->
 		</div>
 	</div>
@@ -35,7 +36,7 @@
 			name = $"{e.FirstName} {e.LastName}",
 			position = e.Position?.ToString() ?? "",
 			managerId = e.ManagerId,
-			image = Url.Content($"~/images/employees/{e.EmployeeId}.jpg")
+			image = @Url.Action("GetImageById", "Home", new {employeeId = e.EmployeeId })
 		})));
 
 		var rows = [];

@@ -8,10 +8,11 @@
 }
 <div class="container">
 	<div class="row">
-		@await Html.PartialAsync("_NavbarPartial")
-
+		<div class="col-lg-2 col-md-3 col-12">
+			@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+		</div>
 		<!-- Employee Search Form -->
-		<div class="col-md-10">
+		<div class="col-lg-10 col-md-9 col-12">
 			<h2>Create Timesheet</h2>
 			<form asp-action="Create" method="post">
 				<input type="hidden" asp-for="EmployeeId" />

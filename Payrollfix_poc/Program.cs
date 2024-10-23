@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Payrollfix_poc.Data;
-using Payrollfix_poc.Models;
 
 public class program
 {
@@ -10,7 +9,7 @@ public class program
 
         builder.Services.AddDbContext<PayRollFix_pocContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("PayRollFixContext") ?? throw new InvalidOperationException("Connection string 'PayRollFixContext' not found.")));
-        // Add session and memory cache support
+
         builder.Services.AddDistributedMemoryCache(); // Required for session state in memory
         builder.Services.AddSession(options =>
         {

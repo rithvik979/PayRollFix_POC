@@ -21,6 +21,8 @@ namespace Payrollfix_poc.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;  // Auto-fill current timestamp
 
+        public string Status { get; set; } = "Pending";
+
         [Required]
         public int EmployeeId { get; set; }
     }

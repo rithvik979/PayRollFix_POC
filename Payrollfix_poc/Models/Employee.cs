@@ -23,7 +23,8 @@ namespace Payrollfix_poc.Models
 		public string Password { get; set; }
 		[Required]
         [Phone]
-        public string Phone_no { get; set; }
+		[RegularExpression(@"^\d{10}$", ErrorMessage = "Please enter a valid 10-digit phone number.")]
+		public string Phone_no { get; set; }
         [Required]
         public string Address { get; set; }
         [DataType(DataType.Date)]
@@ -39,6 +40,7 @@ namespace Payrollfix_poc.Models
         public Position? Position { get; set; }
 		[AllowNull]
         public int? ManagerId { get; set; }
+        public bool IsManager { get; set; }
         [ValidateNever]
         public Employee employee { get; set; }
 

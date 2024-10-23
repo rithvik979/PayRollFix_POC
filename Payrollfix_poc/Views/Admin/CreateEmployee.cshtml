@@ -48,7 +48,7 @@
 
 					<div class="form-group">
 						@Html.LabelFor(m => m.Phone_no)
-						@Html.TextBoxFor(m => m.Phone_no, new { @class = "form-control" })
+						@Html.TextBoxFor(m => m.Phone_no, new { @class = "form-control", @type = "tel", @pattern = "[0-9]*", @maxlength = "10" })
 						@Html.ValidationMessageFor(m => m.Phone_no)
 					</div>
 				</div>
@@ -89,6 +89,14 @@
 						@Html.LabelFor(m => m.JoinDate)
 						@Html.TextBoxFor(m => m.JoinDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
 						@Html.ValidationMessageFor(m => m.JoinDate)
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(m => m.IsManager, "Is a Manager")
+						<div>
+							@Html.RadioButtonFor(m => m.IsManager, "True") Yes
+							@Html.RadioButtonFor(m => m.IsManager, "False") No
+						</div>
+						@Html.ValidationMessageFor(m => m.IsManager)
 					</div>
 				</div>
 
@@ -182,3 +190,13 @@
 		margin-bottom: 20px;
 	}
 </style>
+
+<script type="text/javascript">
+	function isNumberKey(evt) {
+		var charCode = (evt.which) ? evt.which : evt.keyCode;
+		if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+			return false;  // Only allows numeric characters
+		}
+		return true;
+	}
+</script>

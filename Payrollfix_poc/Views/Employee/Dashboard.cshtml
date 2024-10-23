@@ -3,21 +3,21 @@
 	Layout = "~/views/Shared/_EmployeeLayout.cshtml";
 }
 
-<div class="container">
+<div class="container-fluid">
 	<div class="row">
 		<!-- Left Navigation -->
-		@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+		<div class="col-lg-2 col-md-3 col-12">
+			@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+		</div>
+		
 		<!-- Employee Details Section -->
-		@{
-			string imagepath = Url.Content("~/images/Employees/"+Model.EmployeeId+".jpg");
-		}
-		<div class="col-md-10">
+		<div class="col-lg-10 col-md-9 col-12">
 			<div class="employee-details-card">
-				<div class="employee-header">
-					<div class="profile-image">
-						<img src=@imagepath alt="Profile Picture" />
+				<div class="employee-header row">
+					<div class="col-sm-4 col-12 profile-image">
+						<img src="@Url.Action("GetHeaderData", "Home")" alt="Profile Picture" class="img-fluid" />
 					</div>
-					<div class="employee-info">
+					<div class="col-sm-8 col-12 employee-info">
 						<h2>@Model.FirstName @Model.LastName</h2>
 						<p>@Model.EmployeeId</p>
 					</div>
@@ -26,15 +26,13 @@
 				<div class="card-section">
 					<h4>Basic Information</h4>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-6 col-12">
 							<p><strong>Employee ID:</strong> @Model.EmployeeId</p>
 							<p><strong>Role:</strong> @Model.Position?.ToString()</p> <!-- Use null-conditional operator -->
 							<p><strong>Department:</strong> @Model.Department?.Name</p>
 							<p><strong>Date of Birth:</strong> @Model.DOB.ToShortDateString()</p>
 						</div>
-						<div class="col-md-6">
-@* 							<p><strong>Team Lead:</strong> @Model.employee?.FirstName @Model.employee?.LastName ?? "N/A"</p> <!-- Manager's name -->
- *@							<p><strong>CTC:</strong> 45 LPA</p> <!-- This should ideally come from your model -->
+						<div class="col-md-6 col-12">
 							<p><strong>Date of Joining:</strong> @Model.JoinDate.ToShortDateString()</p>
 						</div>
 					</div>
@@ -43,11 +41,11 @@
 				<div class="card-section">
 					<h4>Contact Information</h4>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-6 col-12">
 							<p><strong>Email:</strong> @Model.Email</p>
 							<p><strong>Phone:</strong> @Model.Phone_no</p>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-6 col-12">
 							<p><strong>Address:</strong> @Model.Address, Hyderabad, Telangana, 500009</p>
 							<p><strong>Country:</strong> India</p>
 						</div>
@@ -72,12 +70,12 @@
 								foreach (var leave in Model.Leaves)
 								{
 									DateTime end = leave.EndDate;
-									String diff=leave.StartDate.Subtract(end).ToString(@"dd");
+									String diff = leave.StartDate.Subtract(end).ToString(@"dd");
 									<tr>
-										<td>@leave.LeaveType</td> <!-- Assuming LeaveType is a property of LoginActivity -->
+										<td>@leave.LeaveType</td>
 										<td>@leave.StartDate.ToShortDateString()</td>
-										<td>@leave.EndDate.ToShortDateString()</td> <!-- Update based on your Leave model -->
-										<td>@diff days</td> <!-- Update based on your Leave model -->
+										<td>@leave.EndDate.ToShortDateString()</td>
+										<td>@diff days</td>
 										<td>
 											@if (leave.Status.ToString() == "Accepted")
 											{
@@ -98,7 +96,7 @@
 							else
 							{
 								<tr>
-									<td colspan="4">No applied leaves found.</td>  <!-- Message if no leaves -->
+									<td colspan="5">No applied leaves found.</td>
 								</tr>
 							}
 						</tbody>
@@ -109,5 +107,84 @@
 	</div>
 </div>
 
-<!-- Styling (if required) -->
-<!-- Add your CSS styling here (the same styles you provided before) -->
+<style>
+	/* Global */
+	.container-fluid {
+		padding: 15px;
+	}
+
+	.employee-details-card {
+		background-color: #f9f9f9;
+		border-radius: 10px;
+		padding: 20px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		margin-bottom: 20px;
+	}
+
+	.employee-header {
+		display: flex;
+		align-items: center;
+	}
+
+	.profile-image img {
+		width: 150px;
+		height: 150px;
+		object-fit: cover;
+		border-radius: 50%;
+	}
+
+	.card-section {
+		background: linear-gradient(135deg, #e0f7fa, #ffffff);
+		border-radius: 10px;
+		padding: 20px;
+		margin-bottom: 20px;
+		box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.card-section h4 {
+		font-size: 18px;
+		font-weight: bold;
+		margin-bottom: 15px;
+		color: #333;
+	}
+
+	.card-section p {
+		font-size: 14px;
+		line-height: 1.5;
+		color: #555;
+	}
+
+	.table {
+		width: 100%;
+		margin-top: 15px;
+		border-collapse: separate;
+		border-spacing: 0 10px;
+	}
+
+	.table th {
+		font-weight: bold;
+		color: #666;
+		text-align: left;
+	}
+
+	.table td {
+		background-color: white;
+		padding: 10px;
+		border-radius: 8px;
+	}
+
+	/* Media Queries */
+	@@media (max-width: 767px) {
+		.employee-header {
+			flex-direction: column;
+			text-align: center;
+		}
+	}
+
+	@@media (max-width: 576px) {
+		.profile-image img {
+			width: 100px;
+			height: 100px;
+		}
+	}
+</style>

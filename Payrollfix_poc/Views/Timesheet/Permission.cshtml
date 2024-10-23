@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Payrollfix_poc.Models.Timesheet>
+@{
+	Layout = "~/views/Shared/_EmployeeLayout.cshtml";
+}
+
+<div class="container-fluid">
+	<div class="row">
+		<!-- Left Column: Navbar -->
+		<div class="col-lg-2 col-md-3 col-12">
+			@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+		</div>
+		<div class="col-lg-10 col-md-9 col-12">
+			<h2>Pending Leave Requests</h2>
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Date</th>
+						<th>Created At</th>
+						<th>Description</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var timesheet in Model)
+					{
+						<tr>
+							<td>@timesheet.TimesheetId</td>
+							<td>@timesheet.Date.ToShortDateString()</td>
+							<td>@timesheet.CreatedAt.ToShortDateString()</td>
+							<td>@timesheet.Description</td>
+							<td>
+								@if (timesheet.Status == "Pending")
+								{
+									<form asp-action="ApproveTimesheet" asp-controller="Timesheet" method="post" style="display: inline;">
+										<input type="hidden" name="sheetId" value="@timesheet.TimesheetId" />
+										<button type="submit" class="btn btn-success">Approve</button>
+									</form>
+
+									<form asp-action="RejectTimesheet" asp-controller="Timesheet" method="post" style="display: inline;">
+										<input type="hidden" name="sheetId" value="@timesheet.TimesheetId" />
+										<button type="submit" class="btn btn-danger">Reject</button>
+									</form>
+								}
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

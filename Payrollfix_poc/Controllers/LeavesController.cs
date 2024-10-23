@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Payrollfix_poc.Data;
 using Payrollfix_poc.Models;
+using Payrollfix_poc.ViewModels;
 
 namespace Payrollfix_poc.Controllers
 {
@@ -74,6 +75,54 @@ namespace Payrollfix_poc.Controllers
 			return View("_ApplyLeave", leave);
 		}
 
+        public IActionResult Permission(int employeeId)
+        {
+            var employee = _context.Employee
+                .Include(e => e.Leaves)
+                .FirstOrDefault(e => e.EmployeeId == employeeId);
 
-	}
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            var pendingLeaves = employee.Leaves
+                .Where(l => l.Status == "Pending")
+                .ToList();
+
+            return View(pendingLeaves);
+        }
+        // Action to approve leave
+        [HttpPost]
+        public IActionResult ApproveLeave(int leaveId)
+        {
+            var leave = _context.Leaves.FirstOrDefault(l => l.LeaveId == leaveId);
+            if (leave == null)
+            {
+                return NotFound();
+            }
+
+            // Approve the leave and save changes
+            leave.Status = "Approved";
+            _context.SaveChanges();
+
+            return RedirectToAction("Permission", new {employeeId=leave.EmployeeId});
+        }
+        // Action to reject leave
+        [HttpPost]
+        public IActionResult RejectLeave(int leaveId)
+        {
+            var leave = _context.Leaves.FirstOrDefault(l => l.LeaveId == leaveId);
+            if (leave == null)
+            {
+                return NotFound();
+            }
+
+            // Reject the leave and save changes
+            leave.Status = "Rejected";
+            _context.SaveChanges();
+
+            return RedirectToAction("Permission", new { employeeId = leave.EmployeeId });
+        }
+    }
 }

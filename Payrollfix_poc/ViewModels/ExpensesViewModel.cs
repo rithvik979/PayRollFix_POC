@@ -1,4 +1,6 @@
-﻿namespace Payrollfix_poc.Models
+﻿using Payrollfix_poc.Models;
+
+namespace Payrollfix_poc.ViewModels
 {
     public class ExpenseGroupViewModel
     {

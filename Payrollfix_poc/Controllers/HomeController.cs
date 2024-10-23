@@ -1,14 +1,18 @@
+using MailBee.SmtpMail;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
 using Payrollfix_poc.Data;
 using Payrollfix_poc.Models;
+using Payrollfix_poc.ViewModels;
 using System.Diagnostics;
+using System.Net.Mail;
+using System.Text;
 
 namespace Payrollfix_poc.Controllers
 {
-	public class HomeController : Controller
+    public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
 		private readonly PayRollFix_pocContext _context;
 		public HomeController(PayRollFix_pocContext context)
 		{
@@ -20,12 +24,87 @@ namespace Payrollfix_poc.Controllers
 			return View();
 		}
 
-		public IActionResult ForgotPassword()
-		{
-			return View();
-		}
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
 
-		public IActionResult Signup()
+        [HttpPost]
+        public IActionResult ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Check if the email exists in the Employee table
+                var employee = _context.Employee
+                                       .FirstOrDefault(e => e.Email == model.Email);
+
+                if (employee != null)
+                {
+                    // Generate a new random password
+                    string newPassword = GenerateRandomPassword();
+
+					employee.Password = newPassword;
+                    _context.SaveChanges();
+
+                    // Send email with the new password
+                    SendResetPasswordEmail(employee.Email, newPassword);
+
+                    ViewBag.Message = "An email with the new password has been sent to your email address.";
+                    return View("ForgotPasswordConfirmation");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "The email address is not registered.");
+                }
+            }
+            return View(model);
+        }
+
+        private string GenerateRandomPassword()
+        {
+            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@!#$%^&*()";
+            StringBuilder newPassword = new StringBuilder();
+            Random random = new Random();
+
+            for (int i = 0; i < 6; i++)  // Generate an 6-character password
+            {
+                newPassword.Append(validChars[random.Next(validChars.Length)]);
+            }
+
+            return newPassword.ToString();
+        }
+
+        private void SendResetPasswordEmail(string email, string newPassword)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+
+				mail.From = new MailAddress("g.rithvikreddy909@gmail.com");
+                mail.To.Add(email);
+				mail.Subject = "Password Reset Request";
+				mail.Body = $"Your new password is: {newPassword}";
+
+                //MailBee.SmtpMail.Smtp.QuickSend("jdoe@domain.com", email , sub, "Message Body");
+
+                SmtpClient smtpServer = new SmtpClient();
+
+				smtpServer.Host = "smtp.gmail.com";
+				smtpServer.Port = 587;
+                smtpServer.Credentials = new System.Net.NetworkCredential("g.rithvikreddy909@gmail.com", "yxai scky pzcx aech");
+				smtpServer.EnableSsl = true;
+
+				smtpServer.Send(mail);
+			}
+            catch (Exception ex)
+            {
+                // Handle exception (log it or display an error message)
+                Console.WriteLine($"Email sending failed: {ex.Message}");
+            }
+        }
+
+        public IActionResult Signup()
 		{
 			return View();
 		}
@@ -66,10 +145,10 @@ namespace Payrollfix_poc.Controllers
 				}
 				else
 				{
-					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+					return RedirectToAction("Login", "Home");
 				}
 			}
-			return View();
+			return RedirectToAction("Login", "Home");
 		}
 
 		[HttpPost]
@@ -117,7 +196,6 @@ namespace Payrollfix_poc.Controllers
 						};
 
 						_context.Attendance.Add(attendance);
-						Console.WriteLine("executed");
 					}
 					else
 					{
@@ -127,7 +205,6 @@ namespace Payrollfix_poc.Controllers
 							attendance.CheckInTime = DateTime.Now;
 							attendance.Status = "Present";
 						}
-						Console.WriteLine("Not Executed");
 						// Optionally, handle multiple logins per day
 					}
 
@@ -137,12 +214,12 @@ namespace Payrollfix_poc.Controllers
 					return RedirectToAction("Dashboard", "Employee");
 				}
 				// Invalid login attempt
-				ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+				return RedirectToAction("Login");
 			}
-			return View(model);
+			return RedirectToAction("Login", "Home");
 		}
 
-		public async Task<IActionResult> Logout()
+		public async Task<IActionResult> EmployeeLogout()
 		{
 			// Retrieve the current login activity from session
 			var activityId = HttpContext.Session.GetInt32("ActivityId");
@@ -207,6 +284,19 @@ namespace Payrollfix_poc.Controllers
 			// Clear session
 			HttpContext.Session.Clear();
 			return RedirectToAction("Login", "Home");
+		}
+
+		public IActionResult GetHeaderData()
+		{
+			var employeeId = HttpContext.Session.GetInt32("EmployeeId");
+			var employeeImage = _context.EmployeeImage.FirstOrDefault(e => e.EmployeeId == employeeId);
+			return File(employeeImage.Image, employeeImage.ContentType);
+		}
+
+		public async Task<IActionResult> GetImageById(int employeeId)
+		{
+			var employeeImage = await _context.EmployeeImage.FirstOrDefaultAsync(e => e.EmployeeId == employeeId);
+			return File(employeeImage.Image, employeeImage.ContentType);
 		}
 	}
 }

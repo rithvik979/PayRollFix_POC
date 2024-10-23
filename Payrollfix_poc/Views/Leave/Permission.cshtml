@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Payrollfix_poc.Models.Leave>
+@{
+	Layout = "~/views/Shared/_EmployeeLayout.cshtml";
+}
+
+<div class="container-fluid">
+	<div class="row">
+		<!-- Left Column: Navbar -->
+		<div class="col-lg-2 col-md-3 col-12">
+			@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+		</div>
+		<div class="col-lg-10 col-md-9 col-12">
+			<h2>Pending Leave Requests</h2>
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Leave Type</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Status</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var leave in Model)
+					{
+						<tr>
+							<td>@leave.LeaveType</td>
+							<td>@leave.StartDate.ToShortDateString()</td>
+							<td>@leave.EndDate.ToShortDateString()</td>
+							<td>@leave.Status</td>
+							<td>
+								@if (leave.Status == "Pending")
+								{
+									<form asp-action="ApproveLeave" asp-controller="Leave" method="post" style="display: inline;">
+										<input type="hidden" name="leaveId" value="@leave.LeaveId" />
+										<button type="submit" class="btn btn-success">Approve</button>
+									</form>
+
+									<form asp-action="RejectLeave" asp-controller="Leave" method="post" style="display: inline;">
+										<input type="hidden" name="leaveId" value="@leave.LeaveId" />
+										<button type="submit" class="btn btn-danger">Reject</button>
+									</form>
+								}
+
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

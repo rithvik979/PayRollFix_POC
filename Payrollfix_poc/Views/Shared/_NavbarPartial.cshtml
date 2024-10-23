@@ -24,15 +24,15 @@
                 <i class="fa fa-clock"></i> Timesheet
             </a>
             <a class="list-group-item list-group-item-action @ViewData["ActiveEmployee"]" asp-controller="Employee" asp-action="Organization">
-                <i class="fa fa-users"></i> Organization
+                <i class="fas fa-globe"></i> Organization
             </a>
-            <a class="list-group-item list-group-item-action @ViewData["ActivePaySlips"]" asp-action="">
-                <i class="fa fa-file-invoice"></i> Pay Slips
+            <a class="list-group-item list-group-item-action @ViewData["ActiveMyTeam"]" asp-controller="Employee" asp-action="MyTeam">
+                <i class="fa fa-users"></i> My Team
             </a>
             <a class="list-group-item list-group-item-action @ViewData["ActiveExpenses"]" asp-controller="Expense" asp-action="Index">
                 <i class="fa fa-wallet"></i> Expenses
             </a>
-            <a class="list-group-item list-group-item-action logout @ViewData["ActiveLogout"]" asp-controller="Home" asp-action="Logout">
+            <a class="list-group-item list-group-item-action logout @ViewData["ActiveLogout"]" asp-controller="Home" asp-action="EmployeeLogout">
                 <i class="fa fa-sign-out-alt"></i> Logout
             </a>
         </div>

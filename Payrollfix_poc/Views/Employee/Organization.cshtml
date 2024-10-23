@@ -6,10 +6,11 @@
 <div class="container mt-4">
     <div class="row">
         <!-- Navbar (Partial View) -->
-        @await Html.PartialAsync("_NavbarPartial")
-
+        <div class="col-lg-2 col-md-3 col-12">
+            @await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+        </div>
         <!-- Employee Search Form -->
-        <div class="col-md-10">
+        <div class="col-lg-10 col-md-9 col-12">
             <form asp-action="Organization" method="get" class="">
                 <div class="form-group">
                     <input type="text" name="name" class="form-control mr-2" placeholder="Enter Employee Name" value="@ViewBag.SearchTerm">
@@ -34,17 +35,16 @@
             <div class="row">
                 @foreach (var employee in Model)
                 {
-                    string imagepath = Url.Content("~/images/Employees/"+@employee.EmployeeId+".jpg");
                     <div class="col-md-4">
                         <div class="card mb-4 shadow-sm">
                             <div class="card-body text-center">
-                                <img src= @imagepath class="rounded-circle mb-3" alt="Employee Image" style="width:100px;">
+                                <img src="@Url.Action("GetImageById", "Home", new {employeeId = employee.EmployeeId })" class="rounded-circle mb-3" alt="Employee Image" style="width:100px;">
                                 <h5 class="card-title">@employee.FirstName @employee.LastName</h5>
                                 <p class="text-muted">
-                                    @employee.Position?.PositionDescription ?? "Not Assigned"
+                                    @employee.Position?.PositionDescription + "Not Assigned"
                                 </p>
-                                <p class="text-muted">
-                                    @employee.Department?.DeptDescription ?? "Department Not Assigned"
+                                <p >
+                                    @employee.Department?.Name
                                 </p>
                             </div>
                         </div>

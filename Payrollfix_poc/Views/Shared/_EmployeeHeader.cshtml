@@ -1,60 +1,58 @@
-﻿@model Payrollfix_poc.Models.Employee
-<div class="col-md-10 ml-auto px-0">
-	<header class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-		<div class="container-fluid">
-			<!-- Menu Icon -->
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-
-			<!-- Logo/Company Name -->
-			<a class="navbar-brand" href="#">
-				<img src="~/images/logo.png" alt="Company Logo" class="d-inline-block align-top" style="width: 30px; height: 30px;">
-				<span class="text-danger">Rithvik Software Solutions</span>
-			</a>
-
-			<!-- Search, Help, Notifications, Settings, User Profile -->
-			<ul class="navbar-nav ml-auto align-items-center">
-				<!-- Search Icon -->
-				<li class="nav-item">
-					<a class="nav-link" href="#">
-						<i class="fas fa-search"></i>
-					</a>
-				</li>
-
-				<!-- Help Icon -->
-				<li class="nav-item">
-					<a class="nav-link" href="#">
-						<i class="fas fa-question-circle"></i> Help
-					</a>
-				</li>
-
-				<!-- Notification Icon -->
-				<li class="nav-item">
-					<a class="nav-link" href="#">
-						<i class="fas fa-bell"></i>
-					</a>
-				</li>
-
-				<!-- Settings Icon -->
-				<li class="nav-item">
-					<a class="nav-link" href="#">
-						<i class="fas fa-cog"></i>
-					</a>
-				</li>
-
-				<!-- User Profile -->
-				
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<img src=imagepath alt="User Profile" class="rounded-circle" style="width: 35px; height: 35px;">
-					</a>
-					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-						<a asp-controller="Employee" asp-action="Dashboard" class="dropdown-item">Profile</a>
-						<a asp-controller="Home" asp-action="Logout" class="dropdown-item">Logout</a>
-					</div>
-				</li>
-			</ul>
+﻿@model dynamic
+<div class="container-fluid">
+	<div class="row">
+		<!-- Sidebar Navigation -->
+		<div class="col-md-2 d-none d-md-block">
+			<!-- Hidden on small screens -->
+			@await Html.PartialAsync("_NavbarPartial") <!-- Include your navbar -->
 		</div>
-	</header>
+
+		<div class="col-md-10 col-sm-12 px-0">
+			<header class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+				<div class="container-fluid">
+					<a class="navbar-brand" href="#">
+@* 						<img src="@Url.Action("GetImage", "Admin", new { employeeId = Model.EmployeeId })" alt="Company Logo" class="d-inline-block align-top" style="width: 30px; height: 30px;">
+ *@						<span class="text-danger">Rithvik Software Solutions</span>
+					</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarNav">
+						<ul class="navbar-nav ml-auto">
+							<li class="nav-item">
+								<a class="nav-link" href="#">
+									<i class="fas fa-search"></i>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">
+									<i class="fas fa-question-circle"></i> Help
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">
+									<i class="fas fa-bell"></i>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a asp-action="ResetPassword" class="nav-link">
+									<i class="fas fa-cog"></i>
+								</a>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<img src="@Url.Action("GetHeaderData", "Home")" alt="user profile" class="rounded-circle" style="width: 35px; height: 35px;">
+									
+								</a>
+								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+									<a asp-controller="Employee" asp-action="Dashboard" class="dropdown-item">Profile</a>
+									<a asp-controller="Home" asp-action="EmployeeLogout" class="dropdown-item">Logout</a>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</header>
+		</div>
+	</div>
 </div>

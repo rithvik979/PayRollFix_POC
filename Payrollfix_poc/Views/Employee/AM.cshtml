@@ -7,8 +7,10 @@
 
 <div class="container">
 	<div class="row">
+		<div class="col-lg-2 col-md-3 col-12">
         @await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
-		<div class="col-md-10">
+		</div>
+		<div class="col-lg-10 col-md-9 col-12">
 
 		<table class="table table-striped">
 			<thead>
@@ -43,5 +45,26 @@
 		</table>
 	</div>
 </div>
-</
+</div>
+
+<style>
+	.table {
+		width: 100%;
+		margin-top: 15px;
+		border-collapse: separate;
+		border-spacing: 0 10px; /* Add spacing between rows */
+	}
+
+		.table th {
+			font-weight: bold;
+			color: #666;
+			text-align: left;
+		}
+
+		.table td {
+			background-color: white;
+			padding: 10px;
+			border-radius: 8px;
+		}
+</style>
 
