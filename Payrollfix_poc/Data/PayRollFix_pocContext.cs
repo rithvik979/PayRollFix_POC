@@ -9,8 +9,6 @@ namespace Payrollfix_poc.Data
     {
         public PayRollFix_pocContext(DbContextOptions<PayRollFix_pocContext> options) : base(options) { }
 
-        public DbSet<Department> Department { get; set; }
-        public DbSet<Position> Position { get; set; }
         public DbSet<Employee> Employee { get; set; }
         public DbSet<Attandence> Attendance { get; set; }
         public DbSet<LoginActivity> LoginActivities { get; set; }
@@ -19,7 +17,6 @@ namespace Payrollfix_poc.Data
         public DbSet<LeaveBalance> LeaveBalances { get; set; }
         public DbSet<Timesheet> Timesheets { get; set; }
         public DbSet<Expense> Expenses { get; set; }
-        public DbSet<Admin> Admin { get; set; }
         public DbSet<Salary> Salary { get; set; }
         public DbSet<EmployeeImage> EmployeeImage { get; set; }
     }

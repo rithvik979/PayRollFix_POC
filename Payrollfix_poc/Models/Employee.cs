@@ -35,15 +35,12 @@ namespace Payrollfix_poc.Models
         [Required]
         public DateOnly JoinDate { get; set; }
         [AllowNull]
-        public Department? Department { get; set; }
+        public string? Department { get; set; }
         [AllowNull]
-        public Position? Position { get; set; }
+        public string? Position { get; set; }
 		[AllowNull]
         public int? ManagerId { get; set; }
         public bool IsManager { get; set; }
-        [ValidateNever]
-        public Employee employee { get; set; }
-
         [ValidateNever]
         public ICollection<LoginActivity> LoginActivities { get; set; }
         [ValidateNever]

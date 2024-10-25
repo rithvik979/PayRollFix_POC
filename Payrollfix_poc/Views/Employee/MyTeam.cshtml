@@ -7,7 +7,14 @@
 	<div class="row">
 		<!-- Navbar (Partial View) -->
 		<div class="col-lg-2 col-md-3 col-12">
-			@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+			@if (ViewBag.Position == "Admin")
+			{
+				@await Html.PartialAsync("_AdminNavbarPartial")
+			}
+			else
+			{
+				@await Html.PartialAsync("_NavbarPartial")  <!-- Include your general navbar -->
+			}
 		</div>
 		<div class="col-lg-10 col-md-9 col-12">
 			<h2 class="text-center">Employees Reporting to You</h2>

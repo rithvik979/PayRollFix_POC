@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Payrollfix_poc.Data;
-
+using Payrollfix_poc.Filters;
+using Payrollfix_poc.IRepository;
+using Payrollfix_poc.Services;
 public class program
 {
     public static void Main(string[] args)
@@ -10,6 +12,10 @@ public class program
         builder.Services.AddDbContext<PayRollFix_pocContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("PayRollFixContext") ?? throw new InvalidOperationException("Connection string 'PayRollFixContext' not found.")));
 
+        builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+        builder.Services.AddScoped<IServicesRepository,ServiceRepository>();
+
         builder.Services.AddDistributedMemoryCache(); // Required for session state in memory
         builder.Services.AddSession(options =>
         {
@@ -18,10 +24,11 @@ public class program
             options.Cookie.IsEssential = true; // Make it essential to be included
         });
 
-
         // Add services to the container.
-        builder.Services.AddMvc();
-
+        builder.Services.AddMvc(options =>
+        {
+            options.Filters.Add<CustomAuthorizeAttribute>(); // Register globally if needed
+        });
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

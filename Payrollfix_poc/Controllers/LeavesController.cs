@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Payrollfix_poc.Data;
+using Payrollfix_poc.IRepository;
 using Payrollfix_poc.Models;
 using Payrollfix_poc.ViewModels;
 
@@ -8,11 +8,13 @@ namespace Payrollfix_poc.Controllers
 {
     public class LeaveController : Controller
     {
-        private readonly PayRollFix_pocContext _context;
+        public readonly IEmployeeRepository _employeeRepository;
+        public readonly IAdminRepository _adminRepository;
 
-        public LeaveController(PayRollFix_pocContext context)
+        public LeaveController(PayRollFix_pocContext context,IEmployeeRepository repository,IAdminRepository admin)
         {
-            _context = context;
+            _employeeRepository = repository;
+            _adminRepository = admin;
         }
 
         // Action method to retrieve leaves for a specific employee
@@ -21,14 +23,10 @@ namespace Payrollfix_poc.Controllers
             var employeeId = HttpContext.Session.GetInt32("EmployeeId");
 
             // Get leave details for the specific employee
-            var leaves = await _context.Leaves
-                .Where(l => l.EmployeeId == employeeId)
-                .Include(l => l.Employee) // Include Employee details
-                .ToListAsync();
+            var leaves = await _employeeRepository.GetLeaves(employeeId);
 
             // Get leave balance for the specific employee
-            var leaveBalance = await _context.LeaveBalances
-                .FirstOrDefaultAsync(lb => lb.EmployeeId == employeeId);
+            var leaveBalance = await _employeeRepository.GetLeaveBalance(employeeId);
 
             // Combine both into a view model
             var model = new LeaveViewModel
@@ -36,19 +34,19 @@ namespace Payrollfix_poc.Controllers
                 Leaves = leaves,
                 LeaveBalance = leaveBalance
             };
-
+			ViewBag.Position = (await _employeeRepository.GetEmployeeById(employeeId, null, null)).Position;
 			ViewData["ActiveLeaves"] = "active";
 			return View(model);
         }
 
 		[HttpPost]
-		public IActionResult ApplyLeave(Leave leave)
+		public async Task<IActionResult> ApplyLeave(Leave leave)
 		{
 			if (ModelState.IsValid)
 			{
 				leave.EmployeeId = (int)HttpContext.Session.GetInt32("EmployeeId");
 				// Get the employee's leave balance
-				var leaveBalance = _context.LeaveBalances.FirstOrDefault(lb => lb.EmployeeId == leave.EmployeeId);
+				var leaveBalance = await _employeeRepository.GetLeaveBalance(leave.EmployeeId);
 
 				// Calculate the total leave days
 				int totalLeaveDays = (leave.EndDate - leave.StartDate).Days + 1;
@@ -64,8 +62,8 @@ namespace Payrollfix_poc.Controllers
 				leaveBalance.UsedDays += totalLeaveDays;
 
 				// Add the new leave to the database
-				_context.Leaves.Add(leave);
-				_context.SaveChanges();
+				await _adminRepository.SaveLeave(leave);
+                await _adminRepository.UpdateLeaveBalance(leaveBalance);
 
 				// Redirect back to the leave overview page
 				return RedirectToAction("LeaveDetails");
@@ -75,11 +73,10 @@ namespace Payrollfix_poc.Controllers
 			return View("_ApplyLeave", leave);
 		}
 
-        public IActionResult Permission(int employeeId)
+        public async Task<IActionResult> Permission(int employeeId)
         {
-            var employee = _context.Employee
-                .Include(e => e.Leaves)
-                .FirstOrDefault(e => e.EmployeeId == employeeId);
+			var id = HttpContext.Session.GetInt32("EmployeeId");
+			var employee = await _employeeRepository.GetEmployeeDetails(employeeId);
 
             if (employee == null)
             {
@@ -90,13 +87,14 @@ namespace Payrollfix_poc.Controllers
                 .Where(l => l.Status == "Pending")
                 .ToList();
 
-            return View(pendingLeaves);
+			ViewBag.Position = (await _employeeRepository.GetEmployeeById(id, null, null)).Position;
+			return View(pendingLeaves);
         }
         // Action to approve leave
         [HttpPost]
-        public IActionResult ApproveLeave(int leaveId)
+        public async Task<IActionResult> ApproveLeave(int leaveId)
         {
-            var leave = _context.Leaves.FirstOrDefault(l => l.LeaveId == leaveId);
+            var leave = await _employeeRepository.GetLeaveById(leaveId);
             if (leave == null)
             {
                 return NotFound();
@@ -104,15 +102,15 @@ namespace Payrollfix_poc.Controllers
 
             // Approve the leave and save changes
             leave.Status = "Approved";
-            _context.SaveChanges();
+            await _adminRepository.UpdateLeave(leave);
 
             return RedirectToAction("Permission", new {employeeId=leave.EmployeeId});
         }
         // Action to reject leave
         [HttpPost]
-        public IActionResult RejectLeave(int leaveId)
+        public async Task<IActionResult> RejectLeave(int leaveId)
         {
-            var leave = _context.Leaves.FirstOrDefault(l => l.LeaveId == leaveId);
+            var leave = await _employeeRepository.GetLeaveById(leaveId);
             if (leave == null)
             {
                 return NotFound();
@@ -120,7 +118,7 @@ namespace Payrollfix_poc.Controllers
 
             // Reject the leave and save changes
             leave.Status = "Rejected";
-            _context.SaveChanges();
+            await _adminRepository.UpdateLeave(leave);
 
             return RedirectToAction("Permission", new { employeeId = leave.EmployeeId });
         }

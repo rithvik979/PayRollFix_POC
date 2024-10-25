@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Payrollfix_poc.Data;
+using Payrollfix_poc.Filters;
+using Payrollfix_poc.IRepository;
 using Payrollfix_poc.Models;
 
 namespace Payrollfix_poc.Controllers
@@ -14,31 +15,29 @@ namespace Payrollfix_poc.Controllers
 	/// <para><see cref="UploadImage(int, IFormFile)"/></para>
 	/// <para><see cref="TimeSheet(int)"/></para>
 	/// </summary>
-	public class AdminController : Controller
+
+	[CustomAuthorize(Role ="Admin")]
+    public class AdminController : Controller
 	{
-		public readonly PayRollFix_pocContext _context;
-		public AdminController(PayRollFix_pocContext context)
+		public readonly IEmployeeRepository _employeeRepository;
+		public readonly IAdminRepository _adminRepository;
+		public AdminController(PayRollFix_pocContext context,IEmployeeRepository repository,IAdminRepository admin)
 		{
-			_context = context;
+			_employeeRepository = repository;
+			_adminRepository = admin;
 		}
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
-			int id = 4;
-			var employee = await _context.Employee
-					.Include(e => e.Department) // Include LoginActivities if applicable
-					.Include(e => e.Position)
-					.Include(e => e.Leaves)
-					.Include(e => e.Expenses)
-					.Include(e => e.Timesheets)
-					.FirstOrDefaultAsync(e => e.EmployeeId == id);
+			int id = 43;
+			var employee = await _employeeRepository.GetEmployeeDetails(id);
 			return View(employee);
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Index(string name)
 		{
-			var employees = _context.Employee.ToList();
+			var employees = await _employeeRepository.GetEmployeeList();
 
 			// If a search query is provided, filter the employees
 			if (!string.IsNullOrEmpty(name))
@@ -50,13 +49,7 @@ namespace Payrollfix_poc.Controllers
 				if (emp != null)
 				{
 					int id = emp.EmployeeId;
-					var employee = await _context.Employee
-					.Include(e => e.Department) // Include LoginActivities if applicable
-					.Include(e => e.Position)
-					.Include(e => e.Leaves)
-					.Include(e => e.Expenses)
-					.Include(e => e.Timesheets)
-					.FirstOrDefaultAsync(e => e.EmployeeId == id);
+					var employee = _employeeRepository.GetEmployeeDetails(id);
 
 					return View(employee);
 				}
@@ -72,12 +65,11 @@ namespace Payrollfix_poc.Controllers
 		// POST: AddEmployee
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult CreateEmployee(Employee employee)
+		public async Task<IActionResult> CreateEmployee(Employee employee)
 		{
 			if (ModelState.IsValid)
 			{
-				_context.Employee.Add(employee);
-				_context.SaveChanges();
+				await _adminRepository.SaveEmployee(employee);
 
 				int empid = employee.EmployeeId;
 				// Redirect to salary and leave form
@@ -94,11 +86,11 @@ namespace Payrollfix_poc.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult CreateSalaryLeave(Salary model)
+		public async Task<IActionResult> CreateSalaryLeave(Salary model)
 		{
 			if (ModelState.IsValid)
 			{
-				var employee = _context.Employee.Find(model.EmployeeId);
+				var employee = await _employeeRepository.GetEmployeeById(model.EmployeeId,null,null);
 				if (employee == null)
 				{
 					ModelState.AddModelError("", "Employee does not exist.");
@@ -111,7 +103,7 @@ namespace Payrollfix_poc.Controllers
 					EmployeeId = model.EmployeeId // EmployeeId from form or view model
 				};
 
-				_context.Salary.Add(salary);
+				await _adminRepository.SaveSalary(salary);
 
 				var Leavebalance = new LeaveBalance
 				{
@@ -119,8 +111,8 @@ namespace Payrollfix_poc.Controllers
 					MaxDays = 2,
 					UsedDays = 0
 				};
-				_context.LeaveBalances.Add(Leavebalance);
-				_context.SaveChanges();  // Save the salary & LeaveBalance record
+
+				await _adminRepository.SaveLeaveBalance(Leavebalance);
 
 				int empid=model.EmployeeId;
 				return RedirectToAction("UploadImage", new { employeeId = empid });
@@ -152,8 +144,7 @@ namespace Payrollfix_poc.Controllers
 						ContentType = imageFile.ContentType
 					};
 
-					_context.EmployeeImage.Add(employeeImage);
-					await _context.SaveChangesAsync();
+					await _adminRepository.SaveEmployeeImage(employeeImage);
 				}
 
 				return RedirectToAction("Index", new { id = employeeId });
@@ -163,9 +154,9 @@ namespace Payrollfix_poc.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult EditEmployee(int id)
+		public async Task<IActionResult> EditEmployee(int id)
 		{
-			var employee = _context.Employee.Find(id);
+			var employee = await _employeeRepository.GetEmployeeById(id,null,null);
 
 			if (employee == null)
 			{
@@ -177,11 +168,11 @@ namespace Payrollfix_poc.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult EditEmployee(Employee updatedEmployee)
+		public async Task<IActionResult> EditEmployee(Employee updatedEmployee)
 		{
 			if (ModelState.IsValid)
 			{
-				var employee = _context.Employee.FirstOrDefault(e => e.EmployeeId == updatedEmployee.EmployeeId);
+				var employee = await _employeeRepository.GetEmployeeById(updatedEmployee.EmployeeId,null,null);
 
 				if (employee != null)
 				{
@@ -196,8 +187,7 @@ namespace Payrollfix_poc.Controllers
 					employee.JoinDate = updatedEmployee.JoinDate;
 
 					// Save the changes to the database
-
-					_context.SaveChanges();
+					await _adminRepository.SaveEmployee(employee);
 					return RedirectToAction("Index", new { id = employee.EmployeeId });  // Redirect to the details view after saving
 				}
 			}
@@ -205,12 +195,9 @@ namespace Payrollfix_poc.Controllers
 			return View(updatedEmployee);
 		}
 
-		public IActionResult TimeSheet(int id)
+		public async Task<IActionResult> TimeSheet(int id)
 		{
-			var timesheets = _context.Timesheets
-				.Where(t => t.EmployeeId == id)
-				.OrderByDescending(t => t.Date) // Order by most recent first
-				.ToList();
+			var timesheets = await _employeeRepository.GetTimesheetList(id);
 
 			return View(timesheets);
 		}

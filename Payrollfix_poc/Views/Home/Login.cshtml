@@ -119,13 +119,13 @@
     <div class="container">
         <div class="login-box">
             <!-- Header tabs for Admin and Employee -->
-            <div class="tabs">
+           @*  <div class="tabs">
                 <button id="adminButton" class="active" onclick="setAdminLogin()">Admin</button>
                 <button id="employeeButton" onclick="setEmployeeLogin()">Employee</button>
-            </div>
+            </div> *@
 
             <h2 id="loginTitle">Admin Login</h2>
-            <form id="loginForm" method="POST">
+            <form asp-action="EmployeeLogin" asp-controller="Home" id="loginForm" method="POST">
                 @Html.AntiForgeryToken()
                 <input type="text" name="Id" id="username" placeholder="EmployeeId" required>
                 <input type="password" name="password" placeholder="Password" required>
@@ -136,7 +136,7 @@
         </div>
     </div>
 
-    <script>
+    @* <script>
         // Default action for Admin login
         document.getElementById('loginForm').action = '/Home/AdminLogin';
 
@@ -155,6 +155,6 @@
             document.getElementById('employeeButton').classList.add('active');
             document.getElementById('adminButton').classList.remove('active');
         }
-    </script>
+    </script> *@
 </body>
 </html>

@@ -7,7 +7,14 @@
 	<div class="row">
 		<!-- Left Navigation -->
 		<div class="col-lg-2 col-md-3 col-12">
-			@await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+			@if (Model.Position == "Admin")
+			{
+				@await Html.PartialAsync("_AdminNavbarPartial")
+			}
+			else
+			{
+				@await Html.PartialAsync("_NavbarPartial")  <!-- Include your general navbar -->
+			}
 		</div>
 		
 		<!-- Employee Details Section -->
@@ -28,8 +35,8 @@
 					<div class="row">
 						<div class="col-md-6 col-12">
 							<p><strong>Employee ID:</strong> @Model.EmployeeId</p>
-							<p><strong>Role:</strong> @Model.Position?.ToString()</p> <!-- Use null-conditional operator -->
-							<p><strong>Department:</strong> @Model.Department?.Name</p>
+							<p><strong>Role:</strong> @Model.Position</p> 
+							<p><strong>Department:</strong> @Model.Department</p>
 							<p><strong>Date of Birth:</strong> @Model.DOB.ToShortDateString()</p>
 						</div>
 						<div class="col-md-6 col-12">

@@ -1,22 +1,24 @@
-using MailBee.SmtpMail;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Scripting;
-using Microsoft.EntityFrameworkCore;
-using Payrollfix_poc.Data;
+using Payrollfix_poc.Filters;
+using Payrollfix_poc.IRepository;
 using Payrollfix_poc.Models;
 using Payrollfix_poc.ViewModels;
 using System.Diagnostics;
-using System.Net.Mail;
-using System.Text;
+
 
 namespace Payrollfix_poc.Controllers
 {
+	[CustomAuthorize]
     public class HomeController : Controller
 	{
-		private readonly PayRollFix_pocContext _context;
-		public HomeController(PayRollFix_pocContext context)
+		public readonly IEmployeeRepository _employeeRepository;
+		public readonly IAdminRepository _adminRepository;
+		public readonly IServicesRepository _servicesRepository;
+		public HomeController(IEmployeeRepository repository,IAdminRepository admin,IServicesRepository services)
 		{
-			_context = context;
+			_employeeRepository = repository;
+			_adminRepository = admin;
+			_servicesRepository = services;
 		}
 
 		public IActionResult ContactUs()
@@ -31,24 +33,23 @@ namespace Payrollfix_poc.Controllers
         }
 
         [HttpPost]
-        public IActionResult ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Check if the email exists in the Employee table
-                var employee = _context.Employee
-                                       .FirstOrDefault(e => e.Email == model.Email);
+				// Check if the email exists in the Employee table
+				var employee = await _employeeRepository.GetEmployeeById(null, null, forgotPassword: model);
 
                 if (employee != null)
                 {
-                    // Generate a new random password
-                    string newPassword = GenerateRandomPassword();
+					// Generate a new random password
+					string newPassword = _servicesRepository.GenerateRandomPassword();
 
 					employee.Password = newPassword;
-                    _context.SaveChanges();
+					await _adminRepository.SaveEmployee(employee);
 
                     // Send email with the new password
-                    SendResetPasswordEmail(employee.Email, newPassword);
+                    _servicesRepository.SendResetPasswordEmail(employee.Email, newPassword);
 
                     ViewBag.Message = "An email with the new password has been sent to your email address.";
                     return View("ForgotPasswordConfirmation");
@@ -59,49 +60,6 @@ namespace Payrollfix_poc.Controllers
                 }
             }
             return View(model);
-        }
-
-        private string GenerateRandomPassword()
-        {
-            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@!#$%^&*()";
-            StringBuilder newPassword = new StringBuilder();
-            Random random = new Random();
-
-            for (int i = 0; i < 6; i++)  // Generate an 6-character password
-            {
-                newPassword.Append(validChars[random.Next(validChars.Length)]);
-            }
-
-            return newPassword.ToString();
-        }
-
-        private void SendResetPasswordEmail(string email, string newPassword)
-        {
-            try
-            {
-                MailMessage mail = new MailMessage();
-
-				mail.From = new MailAddress("g.rithvikreddy909@gmail.com");
-                mail.To.Add(email);
-				mail.Subject = "Password Reset Request";
-				mail.Body = $"Your new password is: {newPassword}";
-
-                //MailBee.SmtpMail.Smtp.QuickSend("jdoe@domain.com", email , sub, "Message Body");
-
-                SmtpClient smtpServer = new SmtpClient();
-
-				smtpServer.Host = "smtp.gmail.com";
-				smtpServer.Port = 587;
-                smtpServer.Credentials = new System.Net.NetworkCredential("g.rithvikreddy909@gmail.com", "yxai scky pzcx aech");
-				smtpServer.EnableSsl = true;
-
-				smtpServer.Send(mail);
-			}
-            catch (Exception ex)
-            {
-                // Handle exception (log it or display an error message)
-                Console.WriteLine($"Email sending failed: {ex.Message}");
-            }
         }
 
         public IActionResult Signup()
@@ -133,33 +91,12 @@ namespace Payrollfix_poc.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> AdminLogin(LoginViewModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				var user = await _context.Admin
-										.FirstOrDefaultAsync(e => e.AdminId == model.Id && e.Password == model.Password);
-				if (user != null)
-				{
-					return RedirectToAction("Index", "Admin");
-				}
-				else
-				{
-					return RedirectToAction("Login", "Home");
-				}
-			}
-			return RedirectToAction("Login", "Home");
-		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> EmployeeLogin(LoginViewModel model)
 		{
 			if (ModelState.IsValid)
 			{
 				// Fetch employee using EmployeeId and Password
-				var user = await _context.Employee
-										 .FirstOrDefaultAsync(e => e.EmployeeId == model.Id && e.Password == model.Password);
+				var user = await _employeeRepository.GetEmployeeById(null, model,null);
 
 				if (user != null)
 				{
@@ -170,20 +107,19 @@ namespace Payrollfix_poc.Controllers
 						LoginTime = DateTime.Now
 					};
 
-					// Add login activity to the context
-					_context.LoginActivities.Add(loginActivity);
-					await _context.SaveChangesAsync();
+					// Save login activity to the context
+					await _adminRepository.SaveLoginActivites(loginActivity);
 
 					// Set session values
 					HttpContext.Session.SetInt32("EmployeeId", user.EmployeeId);  // Store EmployeeId in session
 					HttpContext.Session.SetInt32("ActivityId", loginActivity.ActivityId);  // Store ActivityId in session
-
+					HttpContext.Session.SetString("Role", user.Position);
 					// Handle Attendance
 					var today = DateOnly.FromDateTime(DateTime.Now);
 
 					// Check if an attendance record already exists for today
-					var attendance = await _context.Attendance
-												   .FirstOrDefaultAsync(a => a.EmployeeId == user.EmployeeId && a.Date == today);
+					var attendance = await _employeeRepository.GetTodayAttandance(user.EmployeeId, today);
+
 					if (attendance == null)
 					{
 						// Create a new attendance record for today
@@ -195,7 +131,7 @@ namespace Payrollfix_poc.Controllers
 							Status = "Present"
 						};
 
-						_context.Attendance.Add(attendance);
+						await _adminRepository.SaveAttandance(attendance);
 					}
 					else
 					{
@@ -208,9 +144,6 @@ namespace Payrollfix_poc.Controllers
 						// Optionally, handle multiple logins per day
 					}
 
-					// Save changes to Attendance
-					await _context.SaveChangesAsync();
-					Console.WriteLine("sucessfull");
 					return RedirectToAction("Dashboard", "Employee");
 				}
 				// Invalid login attempt
@@ -228,23 +161,20 @@ namespace Payrollfix_poc.Controllers
 			if (activityId.HasValue && employeeId.HasValue)
 			{
 				// Fetch the login activity using ActivityId
-				var loginActivity = await _context.LoginActivities
-												 .FirstOrDefaultAsync(a => a.ActivityId == activityId.Value && a.EmployeeId == employeeId.Value);
+				var loginActivity = await _employeeRepository.GetLoginActivity(activityId, employeeId);
 
 				if (loginActivity != null && loginActivity.LogoutTime == null)
 				{
 					// Store logout time
 					loginActivity.LogoutTime = DateTime.Now;
-					_context.LoginActivities.Update(loginActivity);
-					await _context.SaveChangesAsync();
+					await _adminRepository.UpdateLoginactivity(loginActivity);
 				}
 
 				// Handle Attendance
 				var today = DateOnly.FromDateTime(DateTime.Now);
 
 				// Fetch today's attendance record
-				var attendance = await _context.Attendance
-											   .FirstOrDefaultAsync(a => a.EmployeeId == employeeId.Value && a.Date == today);
+				var attendance =  await _employeeRepository.GetTodayAttandance(employeeId, today);
 
 				if (attendance != null)
 				{
@@ -276,8 +206,7 @@ namespace Payrollfix_poc.Controllers
 						attendance.Status = "Absent";
 					}
 
-					_context.Attendance.Update(attendance);
-					await _context.SaveChangesAsync();
+					await _adminRepository.UpdateAttandance(attendance);
 				}
 			}
 
@@ -286,17 +215,29 @@ namespace Payrollfix_poc.Controllers
 			return RedirectToAction("Login", "Home");
 		}
 
-		public IActionResult GetHeaderData()
+		public async Task<IActionResult> GetHeaderData()
 		{
 			var employeeId = HttpContext.Session.GetInt32("EmployeeId");
-			var employeeImage = _context.EmployeeImage.FirstOrDefault(e => e.EmployeeId == employeeId);
-			return File(employeeImage.Image, employeeImage.ContentType);
+			var employeeImage = await _employeeRepository.GetEmployeeImage(employeeId);
+			if (employeeImage != null)
+			{
+				return File(employeeImage.Image, employeeImage.ContentType);
+			}
+			return null;
 		}
 
 		public async Task<IActionResult> GetImageById(int employeeId)
 		{
-			var employeeImage = await _context.EmployeeImage.FirstOrDefaultAsync(e => e.EmployeeId == employeeId);
-			return File(employeeImage.Image, employeeImage.ContentType);
+			var employeeImage = await _employeeRepository.GetEmployeeImage(employeeId);
+			if (employeeImage != null)
+			{
+				return File(employeeImage.Image, employeeImage.ContentType);
+			}
+			return null;
+		}
+		public IActionResult Unauthorized()
+		{
+			return View();
 		}
 	}
 }

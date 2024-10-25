@@ -7,7 +7,14 @@
     <div class="row">
         <!-- Navbar (Partial View) -->
         <div class="col-lg-2 col-md-3 col-12">
-            @await Html.PartialAsync("_NavbarPartial")  <!-- Include your navbar -->
+            @if (ViewBag.Position == "Admin")
+            {
+                @await Html.PartialAsync("_AdminNavbarPartial")
+            }
+            else
+            {
+                @await Html.PartialAsync("_NavbarPartial")  <!-- Include your general navbar -->
+            }
         </div>
         <!-- Employee Search Form -->
         <div class="col-lg-10 col-md-9 col-12">
@@ -41,10 +48,10 @@
                                 <img src="@Url.Action("GetImageById", "Home", new {employeeId = employee.EmployeeId })" class="rounded-circle mb-3" alt="Employee Image" style="width:100px;">
                                 <h5 class="card-title">@employee.FirstName @employee.LastName</h5>
                                 <p class="text-muted">
-                                    @employee.Position?.PositionDescription + "Not Assigned"
+                                    @employee.Position
                                 </p>
                                 <p >
-                                    @employee.Department?.Name
+                                    @employee.Department
                                 </p>
                             </div>
                         </div>
