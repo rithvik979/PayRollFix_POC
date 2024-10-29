@@ -130,5 +130,10 @@ namespace Payrollfix_poc.Services
         {
             return await _context.Leaves.FirstOrDefaultAsync(l => l.LeaveId == leaveid);
         }
+
+        public async Task<Timesheet> GetTimesheetById(int? id)
+        {
+            return await _context.Timesheets.FindAsync(id);
+        }
     }
 }

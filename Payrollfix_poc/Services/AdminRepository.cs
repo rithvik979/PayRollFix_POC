@@ -59,6 +59,11 @@ namespace Payrollfix_poc.Services
             _context.Attendance.Add(attandence);
             await _context.SaveChangesAsync();
         }
+        public async Task SaveTimesheet(Timesheet timesheet)
+        {
+            _context.Timesheets.Add(timesheet);
+            await _context.SaveChangesAsync();
+        }
 
         public async Task UpdateLoginactivity(LoginActivity activity)
         {
@@ -81,6 +86,17 @@ namespace Payrollfix_poc.Services
         public async Task UpdateLeave(Leave leave)
         {
             _context.Leaves.Update(leave);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateTimesheet(Timesheet timesheet)
+        {
+            _context.Update(timesheet);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteTimesheet(Timesheet timesheet)
+        {
+            _context.Timesheets.Remove(timesheet);
             await _context.SaveChangesAsync();
         }
     }

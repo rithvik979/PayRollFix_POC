@@ -1,26 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Payrollfix_poc.Data;
+using Payrollfix_poc.Filters;
 using Payrollfix_poc.Models;
+using Payrollfix_poc.IRepository;
 
 namespace Payrollfix_poc.Controllers
 {
+	[CustomAuthorize]
+	[AsyncCustomResultFilter]
 	public class TimesheetController : Controller
 	{
-		public readonly PayRollFix_pocContext _context;
+		private readonly IEmployeeRepository _employeeRepository;
+		private readonly IAdminRepository _adminRepository;
 
-		public TimesheetController(PayRollFix_pocContext context)
+		public TimesheetController(IEmployeeRepository repository,IAdminRepository adminRepository)
 		{
-			_context=context;
+			_employeeRepository=repository;
+			_adminRepository=adminRepository;
 		}
 		// Action to display all timesheets
-		public IActionResult TimesheetList()
+		public async Task<IActionResult> TimesheetList()
 		{
 			var id = HttpContext.Session.GetInt32("EmployeeId");
-			var timesheets = _context.Timesheets
-				.Where(t=>t.EmployeeId==id)
-				.OrderByDescending(t => t.Date) // Order by most recent first
-				.ToList();
+			var timesheets = await _employeeRepository.GetTimesheetList(id);
             ViewData["ActiveTimesheet"] = "active";
             return View(timesheets);
 		}
@@ -36,24 +37,23 @@ namespace Payrollfix_poc.Controllers
 		// POST: Timesheet/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Create(Timesheet timesheet)
+		public async Task<IActionResult> Create(Timesheet timesheet)
 		{
 			if (ModelState.IsValid)
 			{
-				_context.Timesheets.Add(timesheet);
-				_context.SaveChanges();
+				await _adminRepository.SaveTimesheet(timesheet);
 				return RedirectToAction("TimesheetList");
 			}
 			return View(timesheet);
 		}
 
 		// GET: Timesheet/Edit/5
-		public IActionResult Edit(int id)
+		public async Task<IActionResult> Edit(int id)
 		{
 			Timesheet timesheet = new Timesheet();
 			int Empid = (int)HttpContext.Session.GetInt32("EmployeeId");
-			timesheet.EmployeeId = id;
-			timesheet = _context.Timesheets.Find(id);
+			//timesheet.EmployeeId = id;
+			timesheet = await _employeeRepository.GetTimesheetById(id);
 			if (timesheet == null)
 			{
 				return NotFound();
@@ -64,7 +64,7 @@ namespace Payrollfix_poc.Controllers
 		// POST: Timesheet/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit(int id, Timesheet timesheet)
+		public async Task<IActionResult> Edit(int id, Timesheet timesheet)
 		{
 			if (id != timesheet.TimesheetId)
 			{
@@ -74,17 +74,16 @@ namespace Payrollfix_poc.Controllers
 			timesheet.EmployeeId = (int)HttpContext.Session.GetInt32("EmployeeId");
 			if (ModelState.IsValid)
 			{
-				_context.Update(timesheet);
-				_context.SaveChanges();
+				await _adminRepository.UpdateTimesheet(timesheet);
 				return RedirectToAction("TimesheetList");
 			}
 			return View(timesheet);
 		}
 
 		// GET: Timesheet/Delete/5
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			var timesheet = _context.Timesheets.Find(id);
+			var timesheet = await _employeeRepository.GetTimesheetById(id);
 			if (timesheet == null)
 			{
 				return NotFound();
@@ -95,35 +94,32 @@ namespace Payrollfix_poc.Controllers
 		// POST: Timesheet/Delete/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult DeleteConfirmed(int id)
+		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			var timesheet = _context.Timesheets.Find(id);
-			_context.Timesheets.Remove(timesheet);
-			_context.SaveChanges();
+			var timesheet = await _employeeRepository.GetTimesheetById(id);
+			await _adminRepository.DeleteTimesheet(timesheet);
 			return RedirectToAction("TimesheetList");
 		}
 
-		public IActionResult Permission(int employeeId)
+		public async Task<IActionResult> Permission(int employeeId)
 		{
-			var employee = _context.Employee
-				.Include(e => e.Timesheets)
-				.FirstOrDefault(e => e.EmployeeId == employeeId);
+			var employee = await _employeeRepository.GetEmployeeDetails(employeeId);
 
 			if (employee == null)
 			{
 				return NotFound();
 			}
 
-			var pendingLeaves = employee.Timesheets
+			var pendingTimesheet = employee.Timesheets
 				.Where(t => t.Status == "Pending")
 				.ToList();
 
-			return View(pendingLeaves);
+			return View(pendingTimesheet);
 		}
 		[HttpPost]
-		public IActionResult ApproveTimesheet(int sheetId)
+		public async Task<IActionResult> ApproveTimesheet(int sheetId)
 		{
-			var timesheet = _context.Timesheets.FirstOrDefault(t => t.TimesheetId == sheetId);
+			var timesheet = await _employeeRepository.GetTimesheetById(sheetId);
 			if (timesheet == null)
 			{
 				return NotFound();
@@ -131,15 +127,15 @@ namespace Payrollfix_poc.Controllers
 
 			// Approve the leave and save changes
 			timesheet.Status = "Approved";
-			_context.SaveChanges();
+			await _adminRepository.UpdateTimesheet(timesheet);
 
 			return RedirectToAction("Permission", new { employeeId = timesheet.EmployeeId });
 		}
 		// Action to reject leave
 		[HttpPost]
-		public IActionResult RejectTimesheet(int sheetId)
+		public async Task<IActionResult> RejectTimesheet(int sheetId)
 		{
-			var timesheet = _context.Timesheets.FirstOrDefault(t => t.TimesheetId == sheetId);
+			var timesheet = await _employeeRepository.GetTimesheetById(sheetId);
 			if (timesheet == null)
 			{
 				return NotFound();
@@ -147,7 +143,7 @@ namespace Payrollfix_poc.Controllers
 
 			// Reject the leave and save changes
 			timesheet.Status = "Rejected";
-			_context.SaveChanges();
+			await _adminRepository.UpdateTimesheet(timesheet);
 
 			return RedirectToAction("Permission", new { employeeId = timesheet.EmployeeId });
 		}

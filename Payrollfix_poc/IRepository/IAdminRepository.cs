@@ -10,8 +10,11 @@ public interface IAdminRepository
     Task SaveExpenses(Expense expense);
     Task SaveLoginActivites(LoginActivity activity); 
     Task SaveAttandance(Attandence attandence);
+    Task SaveTimesheet(Timesheet timesheet);
     Task UpdateLoginactivity(LoginActivity activity); 
     Task UpdateAttandance(Attandence attandence);     
     Task UpdateLeaveBalance(LeaveBalance leaveBalance);
     Task UpdateLeave(Leave leave);
+    Task UpdateTimesheet(Timesheet timesheet);
+    Task DeleteTimesheet(Timesheet timesheet);
 }

@@ -21,5 +21,6 @@ namespace Payrollfix_poc.IRepository
         Task<LeaveBalance> GetLeaveBalance(int? id);
         Task<List<Leave>> GetLeaves(int? id);
         Task<Leave> GetLeaveById(int? leaveid);
+        Task<Timesheet> GetTimesheetById(int? id);
     }
 }

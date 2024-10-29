@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Payrollfix_poc.Models;
 using Payrollfix_poc.IRepository;
+using Payrollfix_poc.Filters;
 
 namespace Payrollfix_poc.Controllers
 {
+    [CustomAuthorize]
     public class ExpenseController : Controller
     {
         public readonly IEmployeeRepository _employeeRepository;

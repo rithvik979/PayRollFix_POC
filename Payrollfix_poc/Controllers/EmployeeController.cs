@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Payrollfix_poc.Filters;
 using Payrollfix_poc.IRepository;
 using Payrollfix_poc.ViewModels;
 
 namespace Payrollfix_poc.Controllers
 {
+    [CustomAuthorize]
     public class EmployeeController : Controller
     {
         public readonly IEmployeeRepository _employeeRepository;

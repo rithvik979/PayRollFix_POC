@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Payrollfix_poc.Data;
-using Payrollfix_poc.Filters;
 using Payrollfix_poc.IRepository;
 using Payrollfix_poc.Services;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+
 public class program
 {
     public static void Main(string[] args)
@@ -12,10 +15,12 @@ public class program
         builder.Services.AddDbContext<PayRollFix_pocContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("PayRollFixContext") ?? throw new InvalidOperationException("Connection string 'PayRollFixContext' not found.")));
 
+        //DI Services 
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-        builder.Services.AddScoped<IServicesRepository,ServiceRepository>();
+        builder.Services.AddScoped<IServicesRepository, ServiceRepository>();
 
+        //Sessions 
         builder.Services.AddDistributedMemoryCache(); // Required for session state in memory
         builder.Services.AddSession(options =>
         {
@@ -25,20 +30,57 @@ public class program
         });
 
         // Add services to the container.
-        builder.Services.AddMvc(options =>
+        builder.Services.AddMvc();
+
+        // JWT Authentication
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                };
+
+                // Custom event to retrieve token from cookie
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Cookies["JwtToken"]; // Get token from cookie
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            context.Token = token; // Token validation
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+
+        // Add role-based authorization policies
+        builder.Services.AddAuthorization(options =>
         {
-            options.Filters.Add<CustomAuthorizeAttribute>(); // Register globally if needed
+            options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
         });
+
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.  
-        }
-        app.UseHsts();
-        app.UseHttpsRedirection();
+			// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+			app.UseHsts();
+
+		}
+		app.UseHttpsRedirection();
         app.UseStaticFiles();
 
         app.UseRouting();
