@@ -100,6 +100,14 @@
 					</div>
 				</div>
 
+				<div class="form-row">
+					<div class="form-group">
+						@Html.LabelFor(m => m.Position)
+						@Html.TextBoxFor(m => m.Position, new { @class = "form-control" })
+						@Html.ValidationMessageFor(m => m.Position)
+					</div>
+				</div>
+
 				<button type="submit" class="btn btn-primary">Next: Add Salary & Leaves</button>
 			</form>
 		</div>

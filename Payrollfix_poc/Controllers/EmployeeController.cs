@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Payrollfix_poc.Filters;
 using Payrollfix_poc.IRepository;
+using Payrollfix_poc.Models;
 using Payrollfix_poc.ViewModels;
 
 namespace Payrollfix_poc.Controllers
@@ -70,7 +71,7 @@ namespace Payrollfix_poc.Controllers
                     }
 
                     employee.Password = model.NewPassword;
-                    await _adminRepository.SaveEmployee(employee);
+                    await _adminRepository.SaveInDb(employee);
 
                     // Optionally redirect or show confirmation
                     ViewBag.Message = "Your password has been successfully updated.";
@@ -127,7 +128,7 @@ namespace Payrollfix_poc.Controllers
         {
             var employeeId = HttpContext.Session.GetInt32("EmployeeId");
 
-            var activities = await _employeeRepository.GetLoginById(employeeId);
+            var activities = await _employeeRepository.GetEntitiesByCondition<LoginActivity>(e => e.EmployeeId == employeeId);
 
             if (activities == null || !activities.Any())
             {
@@ -144,7 +145,7 @@ namespace Payrollfix_poc.Controllers
         {
             var id = HttpContext.Session.GetInt32("EmployeeId");
 
-            var attendance = await _employeeRepository.GetAttandanceById(id);
+            var attendance = await _employeeRepository.GetEntitiesByCondition<Attandence>(e => e.EmployeeId ==  id);
             ViewBag.Position = (await _employeeRepository.GetEmployeeById(id, null, null)).Position;
             ViewData["ActiveAttendance"] = "active";
 
@@ -156,7 +157,7 @@ namespace Payrollfix_poc.Controllers
             var CurrentManagerId = HttpContext.Session.GetInt32("EmployeeId");
 
             // Get the list of employees who report to the current manager
-            var employees = await _employeeRepository.GetManagerById(CurrentManagerId);
+            var employees = await _employeeRepository.GetEntitiesByCondition<Employee>(e => e.ManagerId == CurrentManagerId);
 
 			ViewBag.Position = (await _employeeRepository.GetEmployeeById(CurrentManagerId, null, null)).Position;
 			ViewData["ActiveMyTeam"] = "active";

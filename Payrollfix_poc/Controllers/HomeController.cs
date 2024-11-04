@@ -48,7 +48,7 @@ namespace Payrollfix_poc.Controllers
                     string newPassword = _servicesRepository.GenerateRandomPassword();
 
                     employee.Password = newPassword;
-                    await _adminRepository.SaveEmployee(employee);
+                    await _adminRepository.SaveInDb(employee);
 
                     // Send email with the new password
                     _servicesRepository.SendResetPasswordEmail(employee.Email, newPassword);
@@ -106,7 +106,7 @@ namespace Payrollfix_poc.Controllers
                     };
 
                     // Save login activity to the context
-                    await _adminRepository.SaveLoginActivites(loginActivity);
+                    await _adminRepository.SaveInDb(loginActivity);
 
                     // Set session values
                     HttpContext.Session.SetInt32("EmployeeId", user.EmployeeId);  // Store EmployeeId in session
@@ -129,7 +129,7 @@ namespace Payrollfix_poc.Controllers
                             Status = "Present"
                         };
 
-                        await _adminRepository.SaveAttandance(attendance);
+                        await _adminRepository.SaveInDb(attendance);
                     }
                     else
                     {
@@ -202,7 +202,7 @@ namespace Payrollfix_poc.Controllers
                 {
                     // Store logout time
                     loginActivity.LogoutTime = DateTime.Now;
-                    await _adminRepository.UpdateLoginactivity(loginActivity);
+                    await _adminRepository.UpdateInDb(loginActivity);
                 }
 
                 // Handle Attendance
@@ -241,7 +241,7 @@ namespace Payrollfix_poc.Controllers
                         attendance.Status = "Absent";
                     }
 
-                    await _adminRepository.UpdateAttandance(attendance);
+                    await _adminRepository.UpdateInDb(attendance);
                 }
             }
 

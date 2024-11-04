@@ -4,6 +4,7 @@ using Payrollfix_poc.Data;
 using Microsoft.EntityFrameworkCore;
 using Payrollfix_poc.ViewModels;
 using System.Globalization;
+using System.Linq.Expressions;
 
 namespace Payrollfix_poc.Services
 {
@@ -37,29 +38,15 @@ namespace Payrollfix_poc.Services
             return await _context.Employee.FirstOrDefaultAsync(e => e.Email == forgotPassword.Email);
         }
 
-        public async Task<List<Employee>> GetManagerById(int? id)
-        {
-            return await _context.Employee
-                                 .Where(e => e.ManagerId == id)
-                                 .ToListAsync();
-        }
-
+		public async Task<List<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>> predicate) where T : class
+		{
+			return await _context.Set<T>().Where(predicate).ToListAsync();
+		}
+		
         public async Task<List<Employee>> GetEmployeeList()
         {
             var re = await _context.Employee.ToListAsync();
             return re;
-        }
-
-        public async Task<List<LoginActivity>> GetLoginById(int? id)
-        {
-            return await _context.LoginActivities
-                                 .Where(e => e.EmployeeId == id)
-                                 .ToListAsync();
-        }
-
-        public async Task<List<Attandence>> GetAttandanceById(int? id)
-        {
-            return await _context.Attendance.Where(e => e.EmployeeId == id).ToListAsync();
         }
 
         public async Task<Attandence> GetTodayAttandance(int? id, DateOnly? date)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using Payrollfix_poc.Models;
 using Payrollfix_poc.ViewModels;
 
@@ -6,12 +7,10 @@ namespace Payrollfix_poc.IRepository
 {
     public interface IEmployeeRepository
     {
-        Task<Employee> GetEmployeeDetails(int? id);
+        Task<List<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>> predicate) where T : class;
+		Task<Employee> GetEmployeeDetails(int? id);
         Task<Employee> GetEmployeeById(int? id, LoginViewModel? login, ForgotPasswordViewModel forgotPassword);
-        Task<List<Employee>> GetManagerById(int? id);
         Task<List<Employee>> GetEmployeeList();
-        Task<List<LoginActivity>> GetLoginById(int? id);
-        Task<List<Attandence>> GetAttandanceById(int? id);
         Task<Attandence> GetTodayAttandance(int? id, DateOnly? date);
         Task<List<Timesheet>> GetTimesheetList(int? id);
         Task<List<Expense>> GetExpenseList();

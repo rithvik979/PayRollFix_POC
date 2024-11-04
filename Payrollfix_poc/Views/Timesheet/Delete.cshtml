@@ -5,18 +5,12 @@
 }
 @{
 	Layout = "~/views/Shared/_EmployeeLayout.cshtml";
+	string name = ViewBag.PartialView;
 }
 <div class="container">
 	<div class="row">
 		<div class="col-lg-2 col-md-3 col-12">
-			@if (ViewBag.Position == "Admin")
-			{
-				@await Html.PartialAsync("_AdminNavbarPartial")
-			}
-			else
-			{
-				@await Html.PartialAsync("_NavbarPartial")  <!-- Include your general navbar -->
-			}
+			@await Html.PartialAsync(name)
 		</div>
 		<!-- Employee Search Form -->
 		<div class="col-lg-10 col-md-9 col-12">

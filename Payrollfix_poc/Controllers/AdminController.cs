@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Payrollfix_poc.Data;
 using Payrollfix_poc.Filters;
 using Payrollfix_poc.IRepository;
 using Payrollfix_poc.Models;
@@ -21,7 +20,7 @@ namespace Payrollfix_poc.Controllers
 	{
 		public readonly IEmployeeRepository _employeeRepository;
 		public readonly IAdminRepository _adminRepository;
-		public AdminController(PayRollFix_pocContext context,IEmployeeRepository repository,IAdminRepository admin)
+		public AdminController(IEmployeeRepository repository,IAdminRepository admin)
 		{
 			_employeeRepository = repository;
 			_adminRepository = admin;
@@ -69,7 +68,7 @@ namespace Payrollfix_poc.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				await _adminRepository.SaveEmployee(employee);
+				await _adminRepository.SaveInDb(employee);
 
 				int empid = employee.EmployeeId;
 				// Redirect to salary and leave form
@@ -103,7 +102,7 @@ namespace Payrollfix_poc.Controllers
 					EmployeeId = model.EmployeeId // EmployeeId from form or view model
 				};
 
-				await _adminRepository.SaveSalary(salary);
+				await _adminRepository.SaveInDb(salary);
 
 				var Leavebalance = new LeaveBalance
 				{
@@ -112,7 +111,7 @@ namespace Payrollfix_poc.Controllers
 					UsedDays = 0
 				};
 
-				await _adminRepository.SaveLeaveBalance(Leavebalance);
+				await _adminRepository.SaveInDb(Leavebalance);
 
 				int empid=model.EmployeeId;
 				return RedirectToAction("UploadImage", new { employeeId = empid });
@@ -144,7 +143,7 @@ namespace Payrollfix_poc.Controllers
 						ContentType = imageFile.ContentType
 					};
 
-					await _adminRepository.SaveEmployeeImage(employeeImage);
+					await _adminRepository.SaveInDb(employeeImage);
 				}
 
 				return RedirectToAction("Index", new { id = employeeId });
@@ -187,7 +186,7 @@ namespace Payrollfix_poc.Controllers
 					employee.JoinDate = updatedEmployee.JoinDate;
 
 					// Save the changes to the database
-					await _adminRepository.SaveEmployee(employee);
+					await _adminRepository.SaveInDb(employee);
 					return RedirectToAction("Index", new { id = employee.EmployeeId });  // Redirect to the details view after saving
 				}
 			}

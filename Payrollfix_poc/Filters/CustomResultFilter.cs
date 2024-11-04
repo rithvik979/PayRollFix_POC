@@ -23,8 +23,17 @@ public class AsyncCustomResultFilterAttribute : TypeFilterAttribute
 			var id = context.HttpContext.Session.GetInt32("EmployeeId");
 			if (context.Controller is Controller controller && id.HasValue)
 			{
+				string par = "_NavbarPartial";
+				string parA = "_AdminNavbarPartial";
 				var employee = await _employeeRepository.GetEmployeeById(id, null, null);
-				controller.ViewBag.Position = employee?.Position;
+				if (employee.Position != "Admin")
+				{
+					controller.ViewBag.PartialView = par;
+				}
+				else
+				{
+					controller.ViewBag.PartialView = parA;
+				}
 			}
 			await next();
 		}

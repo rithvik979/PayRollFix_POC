@@ -62,7 +62,6 @@ public class program
                 };
             });
 
-
         // Add role-based authorization policies
         builder.Services.AddAuthorization(options =>
         {

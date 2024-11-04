@@ -64,8 +64,8 @@ namespace Payrollfix_poc.Controllers
 				leaveBalance.UsedDays += totalLeaveDays;
 
 				// Add the new leave to the database
-				await _adminRepository.SaveLeave(leave);
-                await _adminRepository.UpdateLeaveBalance(leaveBalance);
+				await _adminRepository.SaveInDb(leave);
+                await _adminRepository.UpdateInDb(leaveBalance);
 
 				// Redirect back to the leave overview page
 				return RedirectToAction("LeaveDetails");
@@ -104,7 +104,7 @@ namespace Payrollfix_poc.Controllers
 
             // Approve the leave and save changes
             leave.Status = "Approved";
-            await _adminRepository.UpdateLeave(leave);
+            await _adminRepository.UpdateInDb(leave);
 
             return RedirectToAction("Permission", new {employeeId=leave.EmployeeId});
         }
@@ -120,7 +120,7 @@ namespace Payrollfix_poc.Controllers
 
             // Reject the leave and save changes
             leave.Status = "Rejected";
-            await _adminRepository.UpdateLeave(leave);
+            await _adminRepository.UpdateInDb(leave);
 
             return RedirectToAction("Permission", new { employeeId = leave.EmployeeId });
         }

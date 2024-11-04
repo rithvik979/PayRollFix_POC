@@ -41,7 +41,7 @@ namespace Payrollfix_poc.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				await _adminRepository.SaveTimesheet(timesheet);
+				await _adminRepository.SaveInDb(timesheet);
 				return RedirectToAction("TimesheetList");
 			}
 			return View(timesheet);
@@ -74,7 +74,7 @@ namespace Payrollfix_poc.Controllers
 			timesheet.EmployeeId = (int)HttpContext.Session.GetInt32("EmployeeId");
 			if (ModelState.IsValid)
 			{
-				await _adminRepository.UpdateTimesheet(timesheet);
+				await _adminRepository.UpdateInDb(timesheet);
 				return RedirectToAction("TimesheetList");
 			}
 			return View(timesheet);
@@ -127,7 +127,7 @@ namespace Payrollfix_poc.Controllers
 
 			// Approve the leave and save changes
 			timesheet.Status = "Approved";
-			await _adminRepository.UpdateTimesheet(timesheet);
+			await _adminRepository.UpdateInDb(timesheet);
 
 			return RedirectToAction("Permission", new { employeeId = timesheet.EmployeeId });
 		}
@@ -143,7 +143,7 @@ namespace Payrollfix_poc.Controllers
 
 			// Reject the leave and save changes
 			timesheet.Status = "Rejected";
-			await _adminRepository.UpdateTimesheet(timesheet);
+			await _adminRepository.UpdateInDb(timesheet);
 
 			return RedirectToAction("Permission", new { employeeId = timesheet.EmployeeId });
 		}

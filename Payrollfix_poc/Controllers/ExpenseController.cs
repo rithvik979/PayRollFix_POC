@@ -47,7 +47,7 @@ namespace Payrollfix_poc.Controllers
                 }
 
                 model.EmployeeId = employeeId.Value;  // Assign employee ID
-                await _adminRepository.SaveExpenses(model);
+                await _adminRepository.SaveInDb(model);
 
                 return RedirectToAction("Index");
             }
