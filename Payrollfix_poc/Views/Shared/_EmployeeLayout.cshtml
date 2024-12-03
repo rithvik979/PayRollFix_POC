@@ -6,34 +6,57 @@
 	<title>@ViewData["Title"] - PayRollFix</title>
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-	<link rel="stylesheet" href="~/PayRollFix.styles.css" asp-append-version="true" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
 
-
+	@await Html.PartialAsync("_EmployeeHeader", new Payrollfix_poc.Models.Employee())
 </head>
 <body>
-	@await Html.PartialAsync("_EmployeeHeader", new Payrollfix_poc.Models.Employee())
 	<div class="container">
 		<main role="main" class="pb-3">
+			@await Html.PartialAsync("_NavbarPartial");
 			@RenderBody();
 		</main>
+
 	</div>
-
-	<!-- FontAwesome for social icons -->
-	<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	
-	
-	@await RenderSectionAsync("Scripts", required: false)
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+	<script>
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/notificationHub")
+			.build();
+
+		connection.start()
+			.then(function () {
+				console.log("SignalR kdsjfhlsd Connected.");
+			})
+			.catch(function (err) {
+				console.error("Error connecting to SignalR:", err.toString());
+			});
+
+		// Listen for leave status updates
+		connection.on("ReceiveLeaveStatusUpdate", (leaveId, newStatus) => {
+			console.log(`Leave ID: ${leaveId} status updated to: ${newStatus}`);
+			// Update the UI based on the new status
+			document.querySelector(`#leaveStatus-${leaveId}`).innerText = newStatus;
+		});
+
+		// Listen for expense status updates
+		connection.on("ReceiveExpenseStatusUpdate", (expenseId, newStatus) => {
+			console.log(`Expense ID: ${expenseId} status updated to: ${newStatus}`);
+			// Update the UI based on the new status
+			document.querySelector(`#expenseStatus-${expenseId}`).innerText = newStatus;
+		});
+
+	</script>
+	@* @await RenderSectionAsync("Scripts", required: false) *@
 </body>
 </html>

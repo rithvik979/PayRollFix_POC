@@ -6,17 +6,7 @@
 }
 
 <div class="container">
-	<div class="row">
-		<div class="col-lg-2 col-md-3 col-12">
-			@if (ViewBag.Position == "Admin")
-			{
-				@await Html.PartialAsync("_AdminNavbarPartial")
-			}
-			else
-			{
-				@await Html.PartialAsync("_NavbarPartial")  <!-- Include your general navbar -->
-			}
-		</div>
+	<div class="row2">
 		<div class="col-lg-10 col-md-9 col-12">
 
 		<table class="table table-striped">
@@ -55,6 +45,7 @@
 </div>
 
 <style>
+
 	.table {
 		width: 100%;
 		margin-top: 15px;

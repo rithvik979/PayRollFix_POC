@@ -3,18 +3,7 @@
 }
 
 <div class="container-fluid">
-	<div class="row">
-		<!-- Left Column: Navbar -->
-		<div class="col-lg-2 col-md-3 col-12">
-			@if (ViewBag.Position == "Admin")
-			{
-				@await Html.PartialAsync("_AdminNavbarPartial")
-			}
-			else
-			{
-				@await Html.PartialAsync("_NavbarPartial")  <!-- Include your general navbar -->
-			}
-		</div>
+	<div class="row2">
 		<!-- Right Column: Leave Balance and Leave Details -->
 		<div class="col-lg-10 col-md-9 col-12">
 			<!-- Leave Balance Section -->
@@ -62,7 +51,7 @@
 									<td>@leave.LeaveType</td>
 									<td>@leave.StartDate.ToString("dd MMM yyyy")</td>
 									<td>@leave.EndDate.ToString("dd MMM yyyy")</td>
-									<td>@leave.Status</td>
+									<td id="status-@leave.LeaveId">@leave.Status</td> <!-- Unique ID for each status cell -->
 									<td>@leave.Reason</td>
 								</tr>
 							}

@@ -29,18 +29,20 @@ namespace Payrollfix_poc.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public IActionResult ForgotPassword()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
                 // Check if the email exists in the Employee table
-                var employee = await _employeeRepository.GetEmployeeById(null, null, forgotPassword: model);
+                var employee = await _employeeRepository.CheckEmployeeByEmail(model);
 
                 if (employee != null)
                 {
@@ -48,7 +50,7 @@ namespace Payrollfix_poc.Controllers
                     string newPassword = _servicesRepository.GenerateRandomPassword();
 
                     employee.Password = newPassword;
-                    await _adminRepository.SaveInDb(employee);
+                    await _adminRepository.Update(employee);
 
                     // Send email with the new password
                     _servicesRepository.SendResetPasswordEmail(employee.Email, newPassword);
@@ -63,19 +65,23 @@ namespace Payrollfix_poc.Controllers
             }
             return View(model);
         }
+
         public IActionResult Signup()
         {
             return View();
         }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
         public IActionResult AboutUs()
         {
             return View();
         }
+
         public IActionResult Subscription()
         {
             return View();
@@ -94,7 +100,7 @@ namespace Payrollfix_poc.Controllers
             if (ModelState.IsValid)
             {
                 // Fetch employee using EmployeeId and Password
-                var user = await _employeeRepository.GetEmployeeById(null, model, null);
+                var user = await _employeeRepository.ValidateEmployee(model);
 
                 if (user != null)
                 {
@@ -106,11 +112,10 @@ namespace Payrollfix_poc.Controllers
                     };
 
                     // Save login activity to the context
-                    await _adminRepository.SaveInDb(loginActivity);
+                    await _adminRepository.Save(loginActivity);
 
                     // Set session values
                     HttpContext.Session.SetInt32("EmployeeId", user.EmployeeId);  // Store EmployeeId in session
-                    HttpContext.Session.SetInt32("ActivityId", loginActivity.ActivityId);  // Store ActivityId in session
                     HttpContext.Session.SetString("Role", user.Position);
                     // Handle Attendance
                     var today = DateOnly.FromDateTime(DateTime.Now);
@@ -129,7 +134,7 @@ namespace Payrollfix_poc.Controllers
                             Status = "Present"
                         };
 
-                        await _adminRepository.SaveInDb(attendance);
+                        await _adminRepository.Save(attendance);
                     }
                     else
                     {
@@ -160,8 +165,9 @@ namespace Payrollfix_poc.Controllers
                     //});
                     return RedirectToAction("Dashboard", "Employee");
                 }
-                // Invalid login attempt
-                return RedirectToAction("Login");
+				// Invalid login attempt
+				ViewData["ErrorMessage"] = "Invalid ID or Password";
+                return View("Login", model);
             }
             return RedirectToAction("Login", "Home");
         }
@@ -190,19 +196,18 @@ namespace Payrollfix_poc.Controllers
         public async Task<IActionResult> EmployeeLogout()
         {
             // Retrieve the current login activity from session
-            var activityId = HttpContext.Session.GetInt32("ActivityId");
             var employeeId = HttpContext.Session.GetInt32("EmployeeId");
 
-            if (activityId.HasValue && employeeId.HasValue)
+            if (employeeId.HasValue)
             {
                 // Fetch the login activity using ActivityId
-                var loginActivity = await _employeeRepository.GetLoginActivity(activityId, employeeId);
+                var loginActivity = await _employeeRepository.GetLoginActivity(employeeId);
 
                 if (loginActivity != null && loginActivity.LogoutTime == null)
                 {
                     // Store logout time
                     loginActivity.LogoutTime = DateTime.Now;
-                    await _adminRepository.UpdateInDb(loginActivity);
+                    await _adminRepository.Update(loginActivity);
                 }
 
                 // Handle Attendance
@@ -241,7 +246,7 @@ namespace Payrollfix_poc.Controllers
                         attendance.Status = "Absent";
                     }
 
-                    await _adminRepository.UpdateInDb(attendance);
+                    await _adminRepository.Update(attendance);
                 }
             }
 
@@ -270,6 +275,7 @@ namespace Payrollfix_poc.Controllers
             }
             return null;
         }
+
         public IActionResult Unauthorized()
         {
             return View();

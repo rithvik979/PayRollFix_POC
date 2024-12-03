@@ -5,37 +5,28 @@ using System.Threading.Tasks;
 
 public class AsyncCustomResultFilterAttribute : TypeFilterAttribute
 {
-	public AsyncCustomResultFilterAttribute() : base(typeof(AsyncCustomResultFilterImpl))
-	{
-	}
+    public AsyncCustomResultFilterAttribute() : base(typeof(AsyncCustomResultFilterImpl))
+    {
+    }
 
-	private class AsyncCustomResultFilterImpl : IAsyncResultFilter
-	{
-		private readonly IEmployeeRepository _employeeRepository;
+    private class AsyncCustomResultFilterImpl : IAsyncResultFilter
+    {
+        private readonly IEmployeeRepository _employeeRepository;
 
-		public AsyncCustomResultFilterImpl(IEmployeeRepository employeeRepository)
-		{
-			_employeeRepository = employeeRepository;
-		}
+        public AsyncCustomResultFilterImpl(IEmployeeRepository employeeRepository)
+        {
+            _employeeRepository = employeeRepository;
+        }
 
-		public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
-		{
-			var id = context.HttpContext.Session.GetInt32("EmployeeId");
-			if (context.Controller is Controller controller && id.HasValue)
-			{
-				string par = "_NavbarPartial";
-				string parA = "_AdminNavbarPartial";
-				var employee = await _employeeRepository.GetEmployeeById(id, null, null);
-				if (employee.Position != "Admin")
-				{
-					controller.ViewBag.PartialView = par;
-				}
-				else
-				{
-					controller.ViewBag.PartialView = parA;
-				}
-			}
-			await next();
-		}
-	}
+        public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+        {
+            var id = context.HttpContext.Session.GetInt32("EmployeeId");
+            if (context.Controller is Controller controller && id.HasValue)
+            {
+                var employee = await _employeeRepository.GetEmployeeById(id);
+                controller.ViewBag.PartialView = employee.Position;
+            }
+            await next();
+        }
+    }
 }

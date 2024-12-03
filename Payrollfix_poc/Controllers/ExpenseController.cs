@@ -6,11 +6,11 @@ using Payrollfix_poc.Filters;
 namespace Payrollfix_poc.Controllers
 {
     [CustomAuthorize]
-    public class ExpenseController : Controller
+	[AsyncCustomResultFilter]
+	public class ExpenseController : Controller
     {
         public readonly IEmployeeRepository _employeeRepository;
         public readonly IAdminRepository _adminRepository;
-
         public ExpenseController(IEmployeeRepository repository, IAdminRepository admin)
         {
             _employeeRepository = repository;
@@ -23,7 +23,6 @@ namespace Payrollfix_poc.Controllers
             var expenses = await _employeeRepository.GetExpenseList();
             var id = HttpContext.Session.GetInt32("EmployeeId");
             var groupedExpenses = await _employeeRepository.GroupedExpenses(id, expenses);
-			ViewBag.Position = (await _employeeRepository.GetEmployeeById(id, null, null)).Position;
 			ViewData["ActiveExpenses"] = "active";
             return View(groupedExpenses);
         }
@@ -47,7 +46,7 @@ namespace Payrollfix_poc.Controllers
                 }
 
                 model.EmployeeId = employeeId.Value;  // Assign employee ID
-                await _adminRepository.SaveInDb(model);
+                await _adminRepository.Save(model);
 
                 return RedirectToAction("Index");
             }

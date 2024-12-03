@@ -3,20 +3,7 @@
 	Layout = "~/views/Shared/_EmployeeLayout.cshtml";
 }
 
-<div class="container-fluid">
-	<div class="row">
-		<!-- Left Navigation -->
-		<div class="col-lg-2 col-md-3 col-12">
-			@if (Model.Position == "Admin")
-			{
-				@await Html.PartialAsync("_AdminNavbarPartial")
-			}
-			else
-			{
-				@await Html.PartialAsync("_NavbarPartial")  <!-- Include your general navbar -->
-			}
-		</div>
-		
+	<div class="row2">
 		<!-- Employee Details Section -->
 		<div class="col-lg-10 col-md-9 col-12">
 			<div class="employee-details-card">
@@ -112,13 +99,9 @@
 			</div>
 		</div>
 	</div>
-</div>
 
 <style>
-	/* Global */
-	.container-fluid {
-		padding: 15px;
-	}
+
 
 	.employee-details-card {
 		background-color: #f9f9f9;

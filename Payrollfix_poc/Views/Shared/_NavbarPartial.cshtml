@@ -1,43 +1,55 @@
 ﻿<link rel="stylesheet" href="~/css/Navbar.css" />
-
+@{
+	string name = ViewBag.PartialView;
+}
 <div class="col-md-2">
-    <div class="sidebar" id="sidebar">
-        @* <div class="logo">
-            <a href="#">
-                <img src="~/images/logo.png" alt="Logo" />
-            </a>
-        </div> *@
-        <div class="list-group">
-            <a class="list-group-item list-group-item-action @ViewData["ActiveDashboard"]" asp-controller="Employee" asp-action="Dashboard">
-                <i class="fa fa-home"></i> Dashboard
-            </a>
-            <a class="list-group-item list-group-item-action @ViewData["ActiveLoginDetails"]" asp-controller="Employee" asp-action="LoginDetails">
-                <i class="fa fa-user"></i> Login Details
-            </a>
-            <a class="list-group-item list-group-item-action @ViewData["ActiveAttendance"]" asp-controller="Employee" asp-action="AM">
-                <i class="fa fa-calendar"></i> Attendance
-            </a>
-            <a class="list-group-item list-group-item-action @ViewData["ActiveLeaves"]" asp-controller="Leave" asp-action="LeaveDetails">
-                <i class="fa fa-file-alt"></i> Leaves
-            </a>
-            <a class="list-group-item list-group-item-action @ViewData["ActiveTimesheet"]" asp-controller="Timesheet" asp-action="TimeSheetList">
-                <i class="fa fa-clock"></i> Timesheet
-            </a>
-            <a class="list-group-item list-group-item-action @ViewData["ActiveEmployee"]" asp-controller="Employee" asp-action="Organization">
-                <i class="fas fa-globe"></i> Organization
-            </a>
-            <a class="list-group-item list-group-item-action @ViewData["ActiveMyTeam"]" asp-controller="Employee" asp-action="MyTeam">
-                <i class="fa fa-users"></i> My Team
-            </a>
-            <a class="list-group-item list-group-item-action @ViewData["ActiveExpenses"]" asp-controller="Expense" asp-action="Index">
-                <i class="fa fa-wallet"></i> Expenses
-            </a>
-            <a class="list-group-item list-group-item-action logout @ViewData["ActiveLogout"]" asp-controller="Home" asp-action="EmployeeLogout">
-                <i class="fa fa-sign-out-alt"></i> Logout
-            </a>
-        </div>
-    </div>
+	<div class="sidebar" id="sidebar">
+		@* <div class="logo">
+		<a href="#">
+		<img src="~/images/logo.png" alt="Logo" />
+		</a>
+		</div> *@
+		<div class="list-group">
+			<a class="list-group-item list-group-item-action @ViewData["ActiveDashboard"]" asp-controller="Employee" asp-action="Dashboard">
+				<i class="fa fa-home"></i> Dashboard
+			</a>
+			<a class="list-group-item list-group-item-action @ViewData["ActiveLoginDetails"]" asp-controller="Employee" asp-action="LoginDetails">
+				<i class="fa fa-user"></i> Login Details
+			</a>
+			<a class="list-group-item list-group-item-action @ViewData["ActiveAttendance"]" asp-controller="Employee" asp-action="AM">
+				<i class="fa fa-calendar"></i> Attendance
+			</a>
+			@if (name != "Admin")
+			{
+				<a class="list-group-item list-group-item-action @ViewData["ActiveLeaves"]" asp-controller="Leave" asp-action="LeaveDetails">
+					<i class="fa fa-file-alt"></i> Leaves
+				</a>
+			}
+			<a class="list-group-item list-group-item-action @ViewData["ActiveTimesheet"]" asp-controller="Timesheet" asp-action="TimeSheetList">
+				<i class="fa fa-clock"></i> Timesheet
+			</a>
+			<a class="list-group-item list-group-item-action @ViewData["ActiveEmployee"]" asp-controller="Employee" asp-action="Organization">
+				<i class="fas fa-globe"></i> Organization
+			</a>
+			<a class="list-group-item list-group-item-action @ViewData["ActiveMyTeam"]" asp-controller="Employee" asp-action="MyTeam">
+				<i class="fa fa-users"></i> My Team
+			</a>
+			<a class="list-group-item list-group-item-action @ViewData["ActiveExpenses"]" asp-controller="Expense" asp-action="Index">
+				<i class="fa fa-wallet"></i> Expenses
+			</a>
+			@if (name == "Admin")
+			{
+				<a class="list-group-item list-group-item-action @ViewData["ActiveAdmin"]
+						" asp-controller="Admin" asp-action="Index">
+					<i class="fas fa-id-card"></i> Admin Settings
+				</a>
+			}
+			<a class="list-group-item list-group-item-action logout @ViewData["ActiveLogout"]" asp-controller="Home" asp-action="EmployeeLogout">
+				<i class="fa fa-sign-out-alt"></i> Logout
+			</a>
+		</div>
+	</div>
 </div>
 
-<!-- Link the JavaScript file -->
 <script src="~/js/Navbar.js" asp-append-version="true"></script>
+

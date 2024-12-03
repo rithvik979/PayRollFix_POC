@@ -4,12 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PayRollFix</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/PayRollFix.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
 </head>
 <body>
     <header class="bg-light py-2">
@@ -30,6 +28,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Support", "Home")">Support</a>
+                    </li>
+                    <li>
+                        <button id="theme-toggle">Toggle Theme</button>
                     </li>
                 </ul>
             </nav>
@@ -105,12 +106,13 @@
         </div>
     </footer>
 
-    <!-- FontAwesome for social icons -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+
+    <script src="~/js/signalRConnection.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+<script src="~/js/theme-toggle.js"></script>
 </html>

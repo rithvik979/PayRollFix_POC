@@ -2,15 +2,13 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-<script>
-    function validateForm() {
-            var checkbox = document.getElementById("GFG");
+function validateForm() {
+    var checkbox = document.getElementById("GFG");
 
     if (!checkbox.checked) {
         // If checkbox is not checked, prevent form submission
         document.getElementById("sudo").innerHTML =
-        "Checkbox is required!";
-    return false;
-            }
-        }
-</script>
+            "Checkbox is required!";
+        return false;
+    }
+}

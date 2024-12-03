@@ -25,18 +25,20 @@ namespace Payrollfix_poc.Services
                                  .FirstOrDefaultAsync(e => e.EmployeeId == id);
         }
 
-        public async Task<Employee> GetEmployeeById(int? id, LoginViewModel? login, ForgotPasswordViewModel forgotPassword)
+        public async Task<Employee> GetEmployeeById(int? id)
         {
-            if (login == null)
-            {
                 return await _context.Employee.FirstOrDefaultAsync(e => e.EmployeeId == id);
-            }
-            if (forgotPassword == null)
-            {
-                return await _context.Employee.FirstOrDefaultAsync(e => e.EmployeeId == login.Id && e.Password == login.Password);
-            }
-            return await _context.Employee.FirstOrDefaultAsync(e => e.Email == forgotPassword.Email);
         }
+
+        public async Task<Employee> CheckEmployeeByEmail(ForgotPasswordViewModel forgotPassword)
+        {
+			return await _context.Employee.FirstOrDefaultAsync(e => e.Email == forgotPassword.Email);
+		}
+
+        public async Task<Employee> ValidateEmployee(LoginViewModel login)
+        {
+			return await _context.Employee.FirstOrDefaultAsync(e => e.EmployeeId == login.Id && e.Password == login.Password);
+		}
 
 		public async Task<List<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>> predicate) where T : class
 		{
@@ -93,10 +95,12 @@ namespace Payrollfix_poc.Services
             return await _context.EmployeeImage.FirstOrDefaultAsync(e => e.EmployeeId == id);
         }
 
-        public async Task<LoginActivity> GetLoginActivity(int? activityid, int? employeeid)
+        public async Task<LoginActivity> GetLoginActivity(int? employeeid)
         {
             return await _context.LoginActivities
-                                 .FirstOrDefaultAsync(a => a.ActivityId == activityid.Value && a.EmployeeId == employeeid.Value);
+                                        .Where(e => e.EmployeeId == employeeid)
+                                        .OrderByDescending(e => e.LoginTime)
+                                        .FirstOrDefaultAsync();
         }
 
         public async Task<LeaveBalance> GetLeaveBalance(int? id)

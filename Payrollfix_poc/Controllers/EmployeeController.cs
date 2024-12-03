@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Payrollfix_poc.Filters;
 using Payrollfix_poc.IRepository;
 using Payrollfix_poc.Models;
@@ -7,8 +6,20 @@ using Payrollfix_poc.ViewModels;
 
 namespace Payrollfix_poc.Controllers
 {
+    /// <summary>
+    /// This Controller contains 7 Action methods:
+    /// <para><see cref="Dashboard"/></para>
+    /// <para><see cref="ResetPassword(ResetPasswordViewModel)"/></para>
+    /// <para><see cref="Organization(string)"/></para>
+    /// <para><see cref="OrganizationChart"/></para>
+    /// <para><see cref="LoginDetails"/></para>
+    /// <para><see cref="AM"/></para>
+    /// <para><see cref="MyTeam"/></para>
+    /// </summary>
+
     [CustomAuthorize]
-    public class EmployeeController : Controller
+	[AsyncCustomResultFilter]
+	public class EmployeeController : Controller
     {
         public readonly IEmployeeRepository _employeeRepository;
         public readonly IAdminRepository _adminRepository;
@@ -47,7 +58,7 @@ namespace Payrollfix_poc.Controllers
                 // Get the logged-in employee (or use the employee ID)
                 if (EmpId != 0)
                 {
-                    var employee = await _employeeRepository.GetEmployeeById(EmpId,null,null);
+                    var employee = await _employeeRepository.GetEmployeeById(EmpId);
 
                     if (employee == null)
                     {
@@ -71,7 +82,7 @@ namespace Payrollfix_poc.Controllers
                     }
 
                     employee.Password = model.NewPassword;
-                    await _adminRepository.SaveInDb(employee);
+                    await _adminRepository.Save(employee);
 
                     // Optionally redirect or show confirmation
                     ViewBag.Message = "Your password has been successfully updated.";
@@ -85,7 +96,6 @@ namespace Payrollfix_poc.Controllers
         public async Task<IActionResult> Organization(string name)
         {
 			var id = HttpContext.Session.GetInt32("EmployeeId");
-			ViewBag.Position = (await _employeeRepository.GetEmployeeById(id, null, null)).Position;
 			ViewData["ActiveEmployee"] = "active";
 			// Get all employees if no search query is provided
 			var employees = await _employeeRepository.GetEmployeeList();
@@ -118,7 +128,6 @@ namespace Payrollfix_poc.Controllers
         {
 			var id = HttpContext.Session.GetInt32("EmployeeId");
 			var employees = await _employeeRepository.GetEmployeeList();
-			ViewBag.Position = (await _employeeRepository.GetEmployeeById(id, null, null)).Position;
 			ViewData["ActiveEmployee"] = "active";
 			// Pass the employees to the view
 			return View(employees);
@@ -136,7 +145,6 @@ namespace Payrollfix_poc.Controllers
                 return NotFound("No login activities found for the specified employee.");
             }
 
-			ViewBag.Position = (await _employeeRepository.GetEmployeeById(employeeId, null, null)).Position;
 			ViewData["ActiveLoginDetails"] = "active";
             return View(activities);  // Passing the login activities to the view
         }
@@ -146,7 +154,6 @@ namespace Payrollfix_poc.Controllers
             var id = HttpContext.Session.GetInt32("EmployeeId");
 
             var attendance = await _employeeRepository.GetEntitiesByCondition<Attandence>(e => e.EmployeeId ==  id);
-            ViewBag.Position = (await _employeeRepository.GetEmployeeById(id, null, null)).Position;
             ViewData["ActiveAttendance"] = "active";
 
             return View(attendance);
@@ -159,14 +166,9 @@ namespace Payrollfix_poc.Controllers
             // Get the list of employees who report to the current manager
             var employees = await _employeeRepository.GetEntitiesByCondition<Employee>(e => e.ManagerId == CurrentManagerId);
 
-			ViewBag.Position = (await _employeeRepository.GetEmployeeById(CurrentManagerId, null, null)).Position;
 			ViewData["ActiveMyTeam"] = "active";
             return View(employees);
         }
 
-        public IActionResult NotManager()
-        {
-            return View();
-        }
     }
 }

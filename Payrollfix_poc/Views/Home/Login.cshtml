@@ -125,6 +125,10 @@
             </div> *@
 
             <h2 id="loginTitle">Employee Login</h2>
+            @if (ViewData["ErrorMessage"] != null)
+            {
+                <p style="color: red; text-align: center;">@ViewData["ErrorMessage"]</p>
+            }
             <form asp-action="EmployeeLogin" asp-controller="Home" id="loginForm" method="POST">
                 @Html.AntiForgeryToken()
                 <input type="text" name="Id" id="username" placeholder="EmployeeId" required>

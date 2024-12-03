@@ -12,13 +12,13 @@ namespace Payrollfix_poc.Services
             _context = context;
         }
 
-        public async Task SaveInDb<T>(T entity) where T : class
+        public async Task Save<T>(T entity) where T : class
 		{
             _context.Set<T>().Add(entity);
             await _context.SaveChangesAsync();
         }
 
-		public async Task UpdateInDb<T>(T entity) where T : class
+		public async Task Update<T>(T entity) where T : class
         {
             _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();

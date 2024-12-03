@@ -5,14 +5,10 @@
 }
 @{
 	Layout = "~/views/Shared/_EmployeeLayout.cshtml";
-	string name = ViewBag.PartialView;
 }
 
 <div class="container">
-	<div class="row">
-		<div class="col-lg-2 col-md-3 col-12">
-			@await Html.PartialAsync(name)
-		</div>
+	<div class="row2">
 		<!-- Employee Search Form -->
 		<div class="col-lg-10 col-md-9 col-12">
 			<h2>Timesheet List</h2>

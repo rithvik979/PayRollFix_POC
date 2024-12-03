@@ -1,22 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Payrollfix_poc.Data;
 using Payrollfix_poc.Filters;
 using Payrollfix_poc.IRepository;
 using Payrollfix_poc.Models;
+using Payrollfix_poc.SignalR_Hub;
 using Payrollfix_poc.ViewModels;
 
 namespace Payrollfix_poc.Controllers
 {
     [CustomAuthorize]
-    public class LeaveController : Controller
+	[AsyncCustomResultFilter]
+	public class LeaveController : Controller
     {
-        public readonly IEmployeeRepository _employeeRepository;
-        public readonly IAdminRepository _adminRepository;
-
-        public LeaveController(PayRollFix_pocContext context,IEmployeeRepository repository,IAdminRepository admin)
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IAdminRepository _adminRepository;
+        private readonly IHubContext<NotificationHub> _hubContext;
+        public LeaveController(PayRollFix_pocContext context,IEmployeeRepository repository,IAdminRepository admin, IHubContext<NotificationHub> hubContext)
         {
             _employeeRepository = repository;
             _adminRepository = admin;
+            _hubContext = hubContext;
         }
 
         // Action method to retrieve leaves for a specific employee
@@ -36,7 +40,6 @@ namespace Payrollfix_poc.Controllers
                 Leaves = leaves,
                 LeaveBalance = leaveBalance
             };
-			ViewBag.Position = (await _employeeRepository.GetEmployeeById(employeeId, null, null)).Position;
 			ViewData["ActiveLeaves"] = "active";
 			return View(model);
         }
@@ -64,13 +67,12 @@ namespace Payrollfix_poc.Controllers
 				leaveBalance.UsedDays += totalLeaveDays;
 
 				// Add the new leave to the database
-				await _adminRepository.SaveInDb(leave);
-                await _adminRepository.UpdateInDb(leaveBalance);
+				await _adminRepository.Save(leave);
+                await _adminRepository.Update(leaveBalance);
 
 				// Redirect back to the leave overview page
 				return RedirectToAction("LeaveDetails");
 			}
-
 			// Return the same view with validation errors
 			return View("_ApplyLeave", leave);
 		}
@@ -89,7 +91,6 @@ namespace Payrollfix_poc.Controllers
                 .Where(l => l.Status == "Pending")
                 .ToList();
 
-			ViewBag.Position = (await _employeeRepository.GetEmployeeById(id, null, null)).Position;
 			return View(pendingLeaves);
         }
         // Action to approve leave
@@ -101,10 +102,11 @@ namespace Payrollfix_poc.Controllers
             {
                 return NotFound();
             }
-
-            // Approve the leave and save changes
-            leave.Status = "Approved";
-            await _adminRepository.UpdateInDb(leave);
+			string userId = HttpContext.Session.GetString("EmployeeId");
+			// Approve the leave and save changes
+			leave.Status = "Approved";
+            await _adminRepository.Update(leave);
+            await _hubContext.Clients.User(userId).SendAsync("ReceiveLeaveStatusUpdate", leaveId.ToString(), "Approved");
 
             return RedirectToAction("Permission", new {employeeId=leave.EmployeeId});
         }
@@ -120,7 +122,7 @@ namespace Payrollfix_poc.Controllers
 
             // Reject the leave and save changes
             leave.Status = "Rejected";
-            await _adminRepository.UpdateInDb(leave);
+            await _adminRepository.Update(leave);
 
             return RedirectToAction("Permission", new { employeeId = leave.EmployeeId });
         }

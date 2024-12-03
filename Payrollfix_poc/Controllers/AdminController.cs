@@ -9,9 +9,9 @@ namespace Payrollfix_poc.Controllers
 	/// This is Controller Contains 6 action Methods:
 	/// <para><see cref="Index(string)"/>- this method returns all the data of the employee to Index view </para>
 	/// <para><see cref="CreateEmployee()"/>this method will create a employee using the basic details in the database</para>
-	/// <para><see cref="CreateSalaryLeave(int)"/>this method is excecuted following the CreateEmployee in this </para>
-	/// <para><see cref="EditEmployee(Employee)"/></para>
-	/// <para><see cref="UploadImage(int, IFormFile)"/></para>
+	/// <para><see cref="CreateSalaryLeave(int)"/>this method will create the employees salary and leavefor the employee </para>
+	/// <para><see cref="EditEmployee(Employee)"/> this method is used to edit the indiviual employee details by the admin</para>
+	/// <para><see cref="UploadImage(int, IFormFile)"/>this method is used to upload the image of employee in DB in BLOB datatype</para>
 	/// <para><see cref="TimeSheet(int)"/></para>
 	/// </summary>
 
@@ -68,7 +68,7 @@ namespace Payrollfix_poc.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				await _adminRepository.SaveInDb(employee);
+				await _adminRepository.Save(employee);
 
 				int empid = employee.EmployeeId;
 				// Redirect to salary and leave form
@@ -89,7 +89,7 @@ namespace Payrollfix_poc.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var employee = await _employeeRepository.GetEmployeeById(model.EmployeeId,null,null);
+				var employee = await _employeeRepository.GetEmployeeById(model.EmployeeId);
 				if (employee == null)
 				{
 					ModelState.AddModelError("", "Employee does not exist.");
@@ -102,7 +102,7 @@ namespace Payrollfix_poc.Controllers
 					EmployeeId = model.EmployeeId // EmployeeId from form or view model
 				};
 
-				await _adminRepository.SaveInDb(salary);
+				await _adminRepository.Save(salary);
 
 				var Leavebalance = new LeaveBalance
 				{
@@ -111,7 +111,7 @@ namespace Payrollfix_poc.Controllers
 					UsedDays = 0
 				};
 
-				await _adminRepository.SaveInDb(Leavebalance);
+				await _adminRepository.Save(Leavebalance);
 
 				int empid=model.EmployeeId;
 				return RedirectToAction("UploadImage", new { employeeId = empid });
@@ -143,7 +143,7 @@ namespace Payrollfix_poc.Controllers
 						ContentType = imageFile.ContentType
 					};
 
-					await _adminRepository.SaveInDb(employeeImage);
+					await _adminRepository.Save(employeeImage);
 				}
 
 				return RedirectToAction("Index", new { id = employeeId });
@@ -155,7 +155,7 @@ namespace Payrollfix_poc.Controllers
 		[HttpGet]
 		public async Task<IActionResult> EditEmployee(int id)
 		{
-			var employee = await _employeeRepository.GetEmployeeById(id,null,null);
+			var employee = await _employeeRepository.GetEmployeeById(id);
 
 			if (employee == null)
 			{
@@ -171,7 +171,7 @@ namespace Payrollfix_poc.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var employee = await _employeeRepository.GetEmployeeById(updatedEmployee.EmployeeId,null,null);
+				var employee = await _employeeRepository.GetEmployeeById(updatedEmployee.EmployeeId);
 
 				if (employee != null)
 				{
@@ -186,7 +186,7 @@ namespace Payrollfix_poc.Controllers
 					employee.JoinDate = updatedEmployee.JoinDate;
 
 					// Save the changes to the database
-					await _adminRepository.SaveInDb(employee);
+					await _adminRepository.Save(employee);
 					return RedirectToAction("Index", new { id = employee.EmployeeId });  // Redirect to the details view after saving
 				}
 			}

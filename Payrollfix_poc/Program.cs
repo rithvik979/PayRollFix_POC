@@ -5,6 +5,8 @@ using Payrollfix_poc.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
+using Payrollfix_poc.SignalR_Hub;
+using Microsoft.AspNetCore.SignalR;
 
 public class program
 {
@@ -19,6 +21,8 @@ public class program
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         builder.Services.AddScoped<IAdminRepository, AdminRepository>();
         builder.Services.AddScoped<IServicesRepository, ServiceRepository>();
+        builder.Services.AddSingleton<IUserIdProvider, SessionUserIdProvider>();
+
 
         //Sessions 
         builder.Services.AddDistributedMemoryCache(); // Required for session state in memory
@@ -31,7 +35,7 @@ public class program
 
         // Add services to the container.
         builder.Services.AddMvc();
-
+        builder.Services.AddSignalR();
         // JWT Authentication
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -71,13 +75,14 @@ public class program
 
         var app = builder.Build();
 
+        app.MapHub<NotificationHub>("/notificationHub"); // Make sure this matches client-side URL
+
         // Configure the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
+        if (!app.Environment.IsProduction())
         {
             app.UseExceptionHandler("/Home/Error");
 			// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 			app.UseHsts();
-
 		}
 		app.UseHttpsRedirection();
         app.UseStaticFiles();
@@ -89,9 +94,10 @@ public class program
         app.UseAuthorization();
 
         app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=AboutUs}/{id?}");
+                name: "default",
+                pattern: "{controller=Home}/{action=AboutUs}/{id?}");
+            
 
-        app.Run();
+		app.Run();
     }
 }
