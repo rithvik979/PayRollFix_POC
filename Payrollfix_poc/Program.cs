@@ -77,8 +77,17 @@ public class program
 
         app.MapHub<NotificationHub>("/notificationHub"); // Make sure this matches client-side URL
 
-        // Configure the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
+		// Configure the HTTP request pipeline.
+		string environment = Environment.GetEnvironmentVariable("APP_ENV");
+		if (environment == "dev")
+		{
+			// Dev-specific logic
+		}
+		else if (environment == "prod")
+		{
+			// Prod-specific logic
+		}
+		if (!app.Environment.IsProduction())
         {
             app.UseExceptionHandler("/Home/Error");
 			// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
