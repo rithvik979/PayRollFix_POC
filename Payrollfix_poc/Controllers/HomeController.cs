@@ -86,6 +86,10 @@ namespace Payrollfix_poc.Controllers
         {
             return View();
         }
+        public IActionResult FunctionTrigger()
+        {
+            return View();
+        }
 
         [HttpGet]
         public IActionResult Login()
