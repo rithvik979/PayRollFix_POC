@@ -53,4 +53,4 @@ jobs:
           app-name: 'rithvik5'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CEB8265D28964FA6B08C9EB058FFE6E1 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_59DEFBF46F95442EAA45A0A6FFDBBF5A }}
